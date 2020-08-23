@@ -31,7 +31,7 @@ suspend fun main() {
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
 
-fun randomImg(path:String) :File = File("src/img/$path").listFiles().random()
+fun randomImg(path:String) = File("src/img/$path").listFiles()?.random()
 
 fun Bot.keywordReply(){
     this.subscribeMessages {
@@ -56,7 +56,7 @@ fun Bot.keywordReply(){
         case("神话语录") {
             randomImg("mythquotes")?.sendAsImageTo(subject)
         }
-        case("bfm") {
+        case("bfm",true) {
             randomImg("cats")?.sendAsImageTo(subject)
         }
         (contains("技校") or contains("废物")) {
@@ -75,7 +75,7 @@ fun Bot.randomRepeat(){
 
 fun Bot.welcome(){
     this.subscribeAlways<NewFriendRequestEvent> {event->
-        if(this.message.contains("鸽舍")){//验证消息含有”鸽舍“
+        if(this.fromGroupId==596870824L){//好友请求来自组群
             event.accept()
             delay(3000L)
             bot.getFriend(this.fromId).sendMessage("test")
