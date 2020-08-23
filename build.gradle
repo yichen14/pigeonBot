@@ -2,9 +2,13 @@ plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.3.72'
 }
-
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'java-library'
 group 'org.example'
 version '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
@@ -16,4 +20,12 @@ dependencies {
     implementation("net.mamoe:mirai-core-qqandroid:1.2.2")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'com.google.api-client:google-api-client:1.30.1'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.30.1'
+    compile 'com.google.apis:google-api-services-docs:v1-rev20190827-1.30.1'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.6.2'
+    implementation 'com.google.guava:guava:22.0'
+    api 'org.apache.commons:commons-math3:3.6.1'
+    testImplementation 'junit:junit:4.12'
+
 }

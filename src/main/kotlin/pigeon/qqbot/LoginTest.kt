@@ -34,9 +34,6 @@ suspend fun main() {
         (contains("nmsl")) {
             reply("nmysl")
         }
-       // (contains("#神话语录")){
-         //   reply(randomMythQuote().uploadAsImage())
-       // }
         case("芳芳"){
             reply("芳芳是神")
         }
@@ -57,3 +54,5 @@ fun randomImg(path:String) : File {
     var fs = file.listFiles()
     return fs.random()
 }
+
+
