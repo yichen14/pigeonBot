@@ -1,5 +1,6 @@
 package pigeon.qqbot
 
+import kotlinx.coroutines.delay
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.contact.Group
@@ -26,17 +27,7 @@ suspend fun main() {
     val miraiBot = Bot(qqId, password).alsoLogin()//新建Bot并登录
     miraiBot.keywordReply()
     miraiBot.randomRepeat()
-    miraiBot.subscribeAlways<NewFriendRequestEvent> { event->
-        if(event.message.contains("鸽舍")){
-            event.accept()
-            miraiBot.getFriend(event.fromId).sendMessage("nmsl")
-        }
-    }/*
-    miraiBot.subscribeAlways<GroupMessageEvent> {
-        if((1..3).random()==1) {
-            reply(message)//33.3%概率复读
-        }
-    }*/
+    miraiBot.welcome()
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
 
@@ -79,5 +70,16 @@ fun Bot.randomRepeat(){
         if((1..50).random()==1) {
             reply(message)//2%概率复读
         }
+    }
+}
+
+fun Bot.welcome(){
+    this.subscribeAlways<NewFriendRequestEvent> {event->
+        if(this.message.contains("鸽舍")){//验证消息含有”鸽舍“
+            event.accept()
+            delay(3000L)
+            bot.getFriend(this.fromId).sendMessage("test")
+        }
+
     }
 }
