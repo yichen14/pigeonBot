@@ -4,6 +4,8 @@ import net.mamoe.mirai.Bot
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.Member
+import net.mamoe.mirai.event.events.NewFriendRequestEvent
+import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.join
 import net.mamoe.mirai.message.data.At
@@ -14,7 +16,6 @@ import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.utils.toExternalImage
 import net.mamoe.mirai.utils.upload
 import java.io.File
-import kotlin.math.roundToInt
 
 
 suspend fun main() {
@@ -50,10 +51,13 @@ suspend fun main() {
             reply("虚伪b快爬")
         }
     }
+    miraiBot.subscribeAlways<NewFriendRequestEvent> { event->
+        if(event.message.contains("鸽舍")){
+            event.accept()
+            miraiBot.getFriend(event.fromId).sendMessage("nmsl")
+        }
+    }
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
 
-
 fun randomImg(path:String) = File("src/img/$path").listFiles()?.random()
-
-
