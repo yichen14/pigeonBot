@@ -38,21 +38,16 @@ suspend fun main() {
             reply("芳芳是神")
         }
         case("神话语录"){
-            randomImg("mythquotes").sendAsImageTo(subject)
+            randomImg("mythquotes")?.sendAsImageTo(subject)
         }
         case("bfm"){
-            randomImg("cats").sendAsImageTo(subject)
+            randomImg("cats")?.sendAsImageTo(subject)
         }
     }
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
 
 
-fun randomImg(path:String) : File {
-    val PATH = "src/img/$path"
-    val file = File(PATH)
-    var fs = file.listFiles()
-    return fs.random()
-}
+fun randomImg(path:String) = File("src/img/$path").listFiles()?.random()
 
 
