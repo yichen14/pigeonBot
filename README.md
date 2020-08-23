@@ -1,13 +1,13 @@
 # PigeonBot
 A QQ Bot for Star/ACG Pigeon Fan Sub Group.
-Base on Mirai.  
+Based on Mirai.  
 
 ## Main Developer  
-* Veraku Fang
+* Shucheng Fang
 * Xudong Xiao
-* Eason Lu
+* Yichen Lu
 * Ruiling Ma
-* Victor Gao  
+* Wenshu Gao  
 
 ## 开发计划
 ### 主要功能
