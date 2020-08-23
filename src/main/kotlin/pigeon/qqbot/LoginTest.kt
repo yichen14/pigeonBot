@@ -26,12 +26,12 @@ suspend fun main() {
             reply(At(sender as Member) + " 给爷爬 ")
         }
         case("#查询二次元浓度"){
-            reply("${(0..100).random() as Int}%")
+            reply("${(0..100).random()}%")
         }
         (contains("舔") or contains("veraku",true)) {
             reply("veraku是神")
         }
-        (contains("nmsl")) {
+        contains("nmsl") {
             reply("nmysl")
         }
         contains("不行"){
@@ -45,6 +45,9 @@ suspend fun main() {
         }
         case("bfm"){
             randomImg("cats")?.sendAsImageTo(subject)
+        }
+        (contains("技校") or contains("废物")) {
+            reply("虚伪b快爬")
         }
     }
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
