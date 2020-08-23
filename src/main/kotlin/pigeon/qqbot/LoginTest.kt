@@ -29,9 +29,10 @@ suspend fun main() {
     miraiBot.keywordReply()
     miraiBot.randomRepeat()
     miraiBot.welcome()
+    miraiBot.keywordAutoReply()
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
-
+//
 fun randomImg(path:String) = File("src/img/$path").listFiles()?.random()
 
 fun Bot.keywordReply(){
