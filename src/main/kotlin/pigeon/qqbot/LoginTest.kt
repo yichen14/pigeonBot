@@ -18,8 +18,8 @@ import kotlin.math.roundToInt
 
 
 suspend fun main() {
-    val qqId = 3308443151L//Bot的QQ号，需为Long类型，在结尾处添加大写L
-    val password = "Qwerasdf!"//Bot的密码
+    val qqId = 1L//Bot的QQ号，需为Long类型，在结尾处添加大写L
+    val password = "!"//Bot的密码
     val miraiBot = Bot(qqId, password).alsoLogin()//新建Bot并登录
     miraiBot.subscribeMessages {
         "你好" reply "你好!"
