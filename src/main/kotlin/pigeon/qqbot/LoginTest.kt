@@ -22,8 +22,8 @@ import java.io.File
 
 
 suspend fun main() {
-    val qqId = 3308443151L//Bot的QQ号，需为Long类型，在结尾处添加大写L
-    val password = "Qwerasdf!"//Bot的密码
+    val qqId = 3364669470L//Bot的QQ号，需为Long类型，在结尾处添加大写L
+    val password = "fsc146665154"//Bot的密码
     val miraiBot = Bot(qqId, password).alsoLogin()//新建Bot并登录
     miraiBot.keywordReply()
     miraiBot.randomRepeat()
@@ -31,7 +31,7 @@ suspend fun main() {
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
 
-fun randomImg(path:String) = File("src/img/$path").listFiles()?.random()
+fun randomImg(path:String) :File = File("src/img/$path").listFiles().random()
 
 fun Bot.keywordReply(){
     this.subscribeMessages {
@@ -41,7 +41,7 @@ fun Bot.keywordReply(){
         case("#查询二次元浓度") {
             reply("${(0..100).random()}%")
         }
-        (contains("舔") or contains("veraku", true)) {
+        contains("veraku", true) {
             reply("veraku是神")
         }
         contains("nmsl") {
