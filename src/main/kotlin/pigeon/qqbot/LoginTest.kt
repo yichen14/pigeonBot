@@ -4,10 +4,12 @@ import net.mamoe.mirai.Bot
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.Member
+import net.mamoe.mirai.event.events.GroupMemberEvent
 import net.mamoe.mirai.event.events.NewFriendRequestEvent
 import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.join
+import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.sendAsImageTo
@@ -50,11 +52,17 @@ suspend fun main() {
         (contains("技校") or contains("废物")) {
             reply("虚伪b快爬")
         }
+
     }
     miraiBot.subscribeAlways<NewFriendRequestEvent> { event->
         if(event.message.contains("鸽舍")){
             event.accept()
             miraiBot.getFriend(event.fromId).sendMessage("nmsl")
+        }
+    }
+    miraiBot.subscribeAlways<GroupMessageEvent> {
+        if((1..3).random()==1) {
+            reply(message)//33.3%概率复读
         }
     }
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
