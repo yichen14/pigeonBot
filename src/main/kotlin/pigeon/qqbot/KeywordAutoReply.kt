@@ -36,6 +36,11 @@ fun Bot.keywordAutoReply() {
                 reply("添加\"${value}\"到\"${key}\"")
             }
         }
+        startsWith("#del", true) {
+            keywordMap.remove(it)
+            saveAutoReplyList()
+            reply("删除\"$it\"")
+        }
     }
 }
 
