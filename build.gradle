@@ -10,6 +10,11 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+mainClassName='pigeon.qqbot.LoginTestKt'
+run {
+    standardInput = System.in
+}
+
 repositories {
     mavenCentral()
     jcenter()
