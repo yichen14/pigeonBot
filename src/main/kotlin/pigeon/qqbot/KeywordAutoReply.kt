@@ -32,6 +32,7 @@ fun Bot.keywordAutoReply() {
                     keywordMap.getValue(key).add(value)
                 else
                     keywordMap[key] = mutableListOf(value)
+                saveAutoReplyList()
                 reply("添加\"${value}\"到\"${key}\"")
             }
         }

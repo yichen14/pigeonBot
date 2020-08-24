@@ -23,7 +23,6 @@ suspend fun main() {
     miraiBot.welcome()
     miraiBot.keywordAutoReply()
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
-    saveAutoReplyList()
 }
 
 fun randomImg(path: String) = File("src/img/$path").listFiles()?.random()
@@ -37,7 +36,8 @@ fun Bot.keywordReply() {
             reply("${(0..100).random()}%")
         }
         contains("veraku", true) {
-            reply("veraku是神")
+            if ((1..10).random() == 1)
+                reply("veraku是神")
         }
         contains("nmsl") {
             reply("nmysl")
