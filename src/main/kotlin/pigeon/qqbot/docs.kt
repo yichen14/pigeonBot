@@ -42,10 +42,19 @@ class SheetUtil {
             .build()
     private val sheet = service.spreadsheets().get(sheetID).execute()
 
-    fun getAbsentList() {
-        val range="时间安排!A4:O100"
-        val values= sheet[range]
-        print(values)
+    fun getAbsentList(): List<Pair<String, String>> {
+        val range = "时间安排!A4:O100"
+        val values = service.spreadsheets().values().get(sheetID, range).execute().getValues() as List<List<String>>
+        val absentList = mutableListOf<Pair<String,String>>()
+        for (row in values)
+            if(row[6]!="C") {
+                val translators=row[13].split(",")
+                for(i in 1..translators.lastIndex){
+                    if(row[i]!="C")
+                        absentList.add(Pair(row[8],row[i]))
+                }
+            }
+        return absentList
     }
 }
 
