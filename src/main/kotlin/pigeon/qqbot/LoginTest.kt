@@ -15,7 +15,7 @@ import java.io.File
 
 suspend fun main() {
     val qqId = 3364669470L//Bot的QQ号，需为Long类型，在结尾处添加大写L
-    val password = "fsc146665154"//Bot的密码
+    val password = ""//Bot的密码
     val miraiBot = Bot(qqId, password){
         fileBasedDeviceInfo()}.alsoLogin()//新建Bot并登录
     miraiBot.keywordReply()

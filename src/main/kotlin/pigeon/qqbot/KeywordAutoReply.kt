@@ -16,9 +16,6 @@ fun Bot.keywordAutoReply(){
         val words = line.split(" ")
         keywordMap[words[0]]= words.subList(1, words.lastIndex+1).toMutableList()
     }
-    //keywordMap["test1"] = mutableListOf("String","String2","String3")
-    //keywordMap["test2"] = mutableListOf("test","test2","test3")
-    //keywordMap["测试3"] = mutableListOf("测试")
     //TODO: #del <key> <value>
     //TODO: when any part of message contains key, reply.
     this.subscribeAlways<GroupMessageEvent> {
