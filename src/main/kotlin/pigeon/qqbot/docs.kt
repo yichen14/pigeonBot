@@ -40,25 +40,18 @@ class SheetUtil {
     private val service = Sheets.Builder(httpTransport, jsonFactory, getCredentials(httpTransport))
             .setApplicationName(appName)
             .build()
-    private val sheet = service.spreadsheets().get(sheetID).execute()
 
     fun getAbsentList(): List<Pair<String, String>> {
-        val range = "时间安排!A4:O100"
+        val range = "时间安排!A4:O25"
         val values = service.spreadsheets().values().get(sheetID, range).execute().getValues() as List<List<String>>
-        val absentList = mutableListOf<Pair<String,String>>()
+        val absentList = mutableListOf<Pair<String, String>>()
         for (row in values)
-            if(row[6]!="C") {
-                val translators=row[13].split(",")
-                for(i in 1..translators.lastIndex){
-                    if(row[i]!="C")
-                        absentList.add(Pair(row[8],row[i]))
-                }
+            if (row[5] != "C") {
+                val translators = row[12].split(",")
+                for (i in translators.indices)
+                    if (row[i] != "C")
+                        absentList.add(Pair(row[7], translators[i]))
             }
         return absentList
     }
-}
-
-fun main() {
-    val sheetUtil = SheetUtil()
-    sheetUtil.getAbsentList()
 }
