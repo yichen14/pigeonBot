@@ -5,40 +5,50 @@ import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.data.content
+import java.io.*
+
+var keywordMap =  mutableMapOf<String, MutableList<String>>()
+const val autoReplyFilePath = "src/main/resources/autoReply.txt"
+val autoReplyFile = File(autoReplyFilePath)
 
 fun Bot.keywordAutoReply(){
-    var testlist =  mutableMapOf<String, MutableList<String>>()
-    testlist.put("test1", mutableListOf("String","String2","String3"))
-    testlist.put("test2", mutableListOf("test","test2","test3"))
-    testlist.put("测试3", mutableListOf("测试"))
+    for(line in autoReplyFile.readLines()) {
+        val words = line.split(" ")
+        keywordMap[words[0]]= words.subList(1, words.lastIndex+1).toMutableList()
+    }
+    //keywordMap["test1"] = mutableListOf("String","String2","String3")
+    //keywordMap["test2"] = mutableListOf("test","test2","test3")
+    //keywordMap["测试3"] = mutableListOf("测试")
     //TODO: #del <key> <value>
     //TODO: when any part of message contains key, reply.
-    //TODO: save map to local files.
     this.subscribeAlways<GroupMessageEvent> {
-        if(testlist.contains(message.content)){
-            reply(testlist.get(message.content)!!.random())
+        if(keywordMap.contains(message.content)){
+            reply(keywordMap[message.content]!!.random())
         }
     }
     this.subscribeMessages {
         startsWith("#add", removePrefix = true){
-            if(it.splitString()[0] !=""&& it.splitString()[1] !=""){
-                if(testlist.containsKey(it.splitString()[0])){
-                    testlist.getValue(it.splitString()[0]).add(it.splitString()[1])
-                    reply("添加\"${it.splitString()[1]}\"到\"${it.splitString()[0]}\"")
-                }
-                else {
-                    testlist.put(it.splitString()[0], mutableListOf(it.splitString()[1]))
-                    reply("添加\"${it.splitString()[1]}\"到\"${it.splitString()[0]}\"")
-                }
+            val key = it.split(" ")[0]
+            val value = it.split(" ")[1]
+            if(key !=""&& value !=""){
+                if(keywordMap.containsKey(key))
+                    keywordMap.getValue(key).add(value)
+                else
+                    keywordMap[key] = mutableListOf(value)
+                reply("添加\"${value}\"到\"${key}\"")
             }
-
         }
     }
 }
 
-fun String.splitString(): Array<String> {
-    if(this.indexOf(" ")!=-1){
-    return arrayOf(this.substring(0,this.indexOf(" ")),(this.substring(this.indexOf(" ")+1)))
+fun saveAutoReplyList() {
+    val writer= autoReplyFile.writer()
+    for(pair in keywordMap){
+        writer.write(pair.key+" ")
+        for(word in pair.value)
+            writer.write("$word ")
+        writer.write("\n")
     }
-    else return arrayOf("")
+    writer.flush()
+    writer.close()
 }
