@@ -26,9 +26,9 @@ suspend fun main() {
     saveAutoReplyList()
 }
 
-fun randomImg(path:String) = File("src/img/$path").listFiles()?.random()
+fun randomImg(path: String) = File("src/img/$path").listFiles()?.random()
 
-fun Bot.keywordReply(){
+fun Bot.keywordReply() {
     this.subscribeMessages {
         case("at me") {
             reply(At(sender as Member) + " 给爷爬 ")
@@ -51,7 +51,7 @@ fun Bot.keywordReply(){
         case("神话语录") {
             randomImg("mythquotes")?.sendAsImageTo(subject)
         }
-        case("bfm",true) {
+        case("bfm", true) {
             randomImg("cats")?.sendAsImageTo(subject)
         }
         (contains("技校") or contains("废物")) {
@@ -60,17 +60,17 @@ fun Bot.keywordReply(){
     }
 }
 
-fun Bot.randomRepeat(){
+fun Bot.randomRepeat() {
     this.subscribeAlways<GroupMessageEvent> {
-        if((1..50).random()==1) {
+        if ((1..50).random() == 1) {
             reply(message)//2%概率复读
         }
     }
 }
 
-fun Bot.welcome(){
+fun Bot.welcome() {
     this.subscribeAlways<NewFriendRequestEvent> {
-        if(it.fromGroupId==596870824L){//好友请求来自组群
+        if (it.fromGroupId == 596870824L) {//好友请求来自组群
             it.accept()
             delay(3000L)
             this@welcome.getFriend(it.fromId).sendMessage("test")
