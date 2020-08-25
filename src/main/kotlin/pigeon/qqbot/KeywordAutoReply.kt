@@ -8,13 +8,10 @@ import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.message.data.queryUrl
 import net.mamoe.mirai.message.sendAsImageTo
+import org.apache.commons.codec.digest.DigestUtils
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
-import java.io.OutputStream
-import java.math.BigInteger
 import java.net.URL
-import java.security.MessageDigest
 
 
 var keywordMap = mutableMapOf<String, MutableList<String>>()
@@ -29,22 +26,15 @@ fun Bot.keywordAutoReply() {
         keywordMap[words[0]] = words.subList(1, words.lastIndex + 1).toMutableList()
     }
     this.subscribeAlways<GroupMessageEvent> {
-        if(subject.id==1143577518L || subject.id==596870824L) {
-            for((key,value) in keywordMap){
-                    if (message.content.indexOf(key) != -1 && message.content.indexOf("#list ") == -1 && message.content.indexOf("#add ") == -1 && message.content.indexOf("#del ") == -1) {
-                        try{
-                            val reply = keywordMap[key]!!.random()
-                            if (reply.startsWith("$")){
-                                File("src/img/groupImg/"+reply+".jpg").sendAsImageTo(subject)
-                            }
-                            else {
-                                reply(reply)
-                            }
-                        }
-                        catch(e:IllegalArgumentException){
-                            //do nothing
-                        }
-                    }
+        if (subject.id == 1143577518L || subject.id == 596870824L) {
+            for ((key, value) in keywordMap) {
+                if (message.content.indexOf(key) != -1 && !message.content.startsWith("#")) {
+                    val reply = value.random()
+                    if (reply.startsWith("$"))
+                        File("src/img/groupImg/$reply.jpg").sendAsImageTo(subject)
+                    else
+                        reply(reply)
+                }
             }
         }
     }
@@ -52,21 +42,19 @@ fun Bot.keywordAutoReply() {
         startsWith("#add", true) {
             val key = it.split(" ")[0]
             val value = it.split(" ")[1]
-            if (key != "" && value != "" && !key.contains("#list ") && message[Image]==null) {
+            if (key != "" && value != "" && message[Image] == null) {
                 if (keywordMap.containsKey(key))
                     keywordMap.getValue(key).add(value)
                 else
                     keywordMap[key] = mutableListOf(value)
                 saveAutoReplyList()
                 reply("添加\"${value}\"到\"${key}\"")
-            }
-            if(message[Image]!=null){
-                val str = saveImage(message[Image]!!.queryUrl())
+            } else if (message[Image] != null) {
+                val str = saveImg(message[Image]!!.queryUrl())
                 if (keywordMap.containsKey(key)) {
                     if (!(keywordMap.getValue(key).contains(str)))
                         keywordMap.getValue(key).add(str)
-                }
-                else
+                } else
                     keywordMap[key] = mutableListOf(str)
                 saveAutoReplyList()
                 reply("添加\"${value}\"到\"${key}\"")
@@ -75,21 +63,21 @@ fun Bot.keywordAutoReply() {
         startsWith("#del", true) {
             val key = it.split(" ")[0]
             val value = it.split(" ")[1]
-            val str = saveImage(message[Image]!!.queryUrl())
-            if(value == "[图片]")
+            val str = getMD5(message[Image]!!.queryUrl())
+            if (value == "[图片]")
                 keywordMap[key]!!.remove(str)
             else
                 keywordMap[key]!!.remove(value)
-            if(keywordMap[key].isNullOrEmpty())
+            if (keywordMap[key].isNullOrEmpty())
                 keywordMap.remove(key)
             saveAutoReplyList()
             reply("删除\"$it\"")
         }
-        startsWith("#list ", true){
+        startsWith("#list ", true) { it ->
             var rpl = ""
-            if(keywordMap.containsKey(it)){
+            if (keywordMap.containsKey(it)) {
                 keywordMap[it]!!.forEach {
-                    rpl+=(it+"\n")
+                    rpl += "$it\n"
                 }
                 reply(rpl)
             }
@@ -108,28 +96,22 @@ fun saveAutoReplyList() {
     writer.flush()
     writer.close()
 }
+
 /*
 下载图片 并保存为$<md5>.jpg
  */
-@Throws(IOException::class)
-fun saveImage(imageUrl: String?) : String{
-    var img:File = File("src/img/groupImg/temp.jpg")
-    if(!img.exists())
+fun saveImg(imageUrl: String): String {
+    val img = File("src/img/groupImg/temp.jpg")
+    if (!img.exists())
         img.createNewFile()
-    val url = URL(imageUrl)
-    val input = url.openStream()
-    val output: OutputStream = FileOutputStream(img)
-    val b = ByteArray(2048)
-    var length: Int
-    var md = MessageDigest.getInstance("MD5")
-    while (input.read(b).also { length = it } != -1) {
-        md.update(b, 0, length)
-        output.write(b, 0, length)
-    }
+    val input = URL(imageUrl).openStream()
+    val output = FileOutputStream(img)
+    input.copyTo(output)
+    val md5 = DigestUtils.md5Hex(input)
     input.close()
     output.close()
-    val md5Bytes = md.digest()
-    val bigInt :BigInteger = BigInteger(1, md5Bytes)
-    img.renameTo(File("src/img/groupImg/"+"$"+bigInt.toString(16)+".jpg"))
-    return ("$"+bigInt.toString(16))
+    img.renameTo(File("src/img/groupImg/$$md5.jpg"))
+    return ("$$md5")
 }
+
+fun getMD5(imageUrl: String?): String = DigestUtils.md5Hex(URL(imageUrl).openStream())
