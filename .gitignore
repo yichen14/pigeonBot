@@ -1,2 +1,5 @@
-/.gradle/
-/.idea/
+.gradle/
+gradle/
+build/
+.idea/
+tokens/

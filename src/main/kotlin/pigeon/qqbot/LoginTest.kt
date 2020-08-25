@@ -3,19 +3,27 @@ package pigeon.qqbot
 import kotlinx.coroutines.delay
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.alsoLogin
+import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.Member
+import net.mamoe.mirai.event.events.GroupMemberEvent
 import net.mamoe.mirai.event.events.NewFriendRequestEvent
 import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.join
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.data.At
+import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.sendAsImageTo
+import net.mamoe.mirai.message.uploadAsImage
+import net.mamoe.mirai.utils.BotConfiguration
+import net.mamoe.mirai.utils.toExternalImage
+import net.mamoe.mirai.utils.upload
 import java.io.File
 
+
 suspend fun main() {
-    val qqId = 3308443151L//Bot的QQ号，需为Long类型，在结尾处添加大写L
-    val password = "Qwerasdf!"//Bot的密码
+    val qqId = 1L//Bot的QQ号，需为Long类型，在结尾处添加大写L
+    val password = ""//Bot的密码
     val miraiBot = Bot(qqId, password){
         fileBasedDeviceInfo()}.alsoLogin()//新建Bot并登录
     miraiBot.keywordReply()
@@ -24,10 +32,10 @@ suspend fun main() {
     miraiBot.keywordAutoReply()
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
+//
+fun randomImg(path:String) = File("src/img/$path").listFiles()?.random()
 
-fun randomImg(path: String) = File("src/img/$path").listFiles()?.random()
-
-fun Bot.keywordReply() {
+fun Bot.keywordReply(){
     this.subscribeMessages {
         case("at me") {
             reply(At(sender as Member) + " 给爷爬 ")
@@ -36,8 +44,7 @@ fun Bot.keywordReply() {
             reply("${(0..100).random()}%")
         }
         contains("veraku", true) {
-            if ((1..10).random() == 1)
-                reply("veraku是神")
+            reply("veraku是神")
         }
         contains("nmsl") {
             reply("nmysl")
@@ -51,9 +58,6 @@ fun Bot.keywordReply() {
         case("神话语录") {
             randomImg("mythquotes")?.sendAsImageTo(subject)
         }
-        case("#help"){
-            reply("#add <key> <value>\n当消息包含关键字<key>的时候回复<value>\n#del <key> <value>\n删除关键字和回复内容\n#list <key>\n列出关键字对应的所有回复")
-        }
         (contains("技校") or contains("废物")) {
             reply("虚伪b快爬")
         }
@@ -63,20 +67,21 @@ fun Bot.keywordReply() {
     }
 }
 
-fun Bot.randomRepeat() {
+fun Bot.randomRepeat(){
     this.subscribeAlways<GroupMessageEvent> {
-        if ((1..50).random() == 1) {
+        if((1..50).random()==1) {
             reply(message)//2%概率复读
         }
     }
 }
 
-fun Bot.welcome() {
-    this.subscribeAlways<NewFriendRequestEvent> {
-        if (it.fromGroupId == 596870824L) {//好友请求来自组群
-            it.accept()
+fun Bot.welcome(){
+    this.subscribeAlways<NewFriendRequestEvent> {event->
+        if(this.fromGroupId==596870824L){//好友请求来自组群
+            event.accept()
             delay(3000L)
-            this@welcome.getFriend(it.fromId).sendMessage("test")
+            bot.getFriend(this.fromId).sendMessage("test")
         }
+
     }
 }
