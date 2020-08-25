@@ -4,9 +4,15 @@ import net.mamoe.mirai.Bot
 import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.message.GroupMessageEvent
+import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.content
+import net.mamoe.mirai.message.data.queryUrl
 import java.io.File
-import java.lang.IllegalArgumentException
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.net.URL
+
 
 var keywordMap = mutableMapOf<String, MutableList<String>>()
 const val autoReplyFilePath = "src/main/resources/autoReply.txt"
@@ -31,8 +37,8 @@ fun Bot.keywordAutoReply() {
                         }
                     }
             }/*
-            if (keywordMap.contains(message.content)) {
-                reply(keywordMap[message.content]!!.random())//废弃
+            if(message[Image]!=null) {
+                reply(message[Image]!!.queryUrl())//For future usage
             }*/
         }
     }
@@ -76,4 +82,18 @@ fun saveAutoReplyList() {
     }
     writer.flush()
     writer.close()
+}
+
+@Throws(IOException::class)
+fun saveImage(imageUrl: String?) {
+    val url = URL(imageUrl)
+    val input = url.openStream()
+    val output: OutputStream = FileOutputStream(destinationFile)
+    val b = ByteArray(2048)
+    var length: Int
+    while (input.read(b).also { length = it } != -1) {
+        output.write(b, 0, length)
+    }
+    input.close()
+    output.close()
 }
