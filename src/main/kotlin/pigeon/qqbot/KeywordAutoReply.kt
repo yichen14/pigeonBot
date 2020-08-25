@@ -4,41 +4,132 @@ import net.mamoe.mirai.Bot
 import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.message.GroupMessageEvent
+import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.content
+import net.mamoe.mirai.message.data.queryUrl
+import net.mamoe.mirai.message.sendAsImageTo
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.math.BigInteger
+import java.net.URL
+import java.security.MessageDigest
 
-fun Bot.keywordAutoReply(){
-    var testlist =  mutableMapOf<String, MutableList<String>>()
-    testlist.put("test1", mutableListOf("String","String2","String3"))
-    testlist.put("test2", mutableListOf("test","test2","test3"))
-    testlist.put("测试3", mutableListOf("测试"))
-    //TODO: #del <key> <value>
-    //TODO: when any part of message contains key, reply.
-    //TODO: save map to local files.
+
+var keywordMap = mutableMapOf<String, MutableList<String>>()
+const val autoReplyFilePath = "src/main/resources/autoReply.txt"
+val autoReplyFile = File(autoReplyFilePath)
+
+//TODO: 语录上传
+
+fun Bot.keywordAutoReply() {
+    for (line in autoReplyFile.readLines()) {
+        val words = line.split(" ")
+        keywordMap[words[0]] = words.subList(1, words.lastIndex + 1).toMutableList()
+    }
     this.subscribeAlways<GroupMessageEvent> {
-        if(testlist.contains(message.content)){
-            reply(testlist.get(message.content)!!.random())
+        if(subject.id==1143577518L) {
+            for((key,value) in keywordMap){
+                    if (message.content.indexOf(key) != -1 && message.content.indexOf("#list ") == -1 && message.content.indexOf("#add ") == -1 && message.content.indexOf("#del ") == -1) {
+                        try{
+                            val reply = keywordMap[key]!!.random()
+                            if (reply.startsWith("$")){
+                                File("src/img/groupImg/"+reply+".jpg").sendAsImageTo(subject)
+                            }
+                            else {
+                                reply(reply)
+                            }
+                        }
+                        catch(e:IllegalArgumentException){
+                            //do nothing
+                        }
+                    }
+            }
         }
     }
     this.subscribeMessages {
-        startsWith("#add", removePrefix = true){
-            if(it.splitString()[0] !=""&& it.splitString()[1] !=""){
-                if(testlist.containsKey(it.splitString()[0])){
-                    testlist.getValue(it.splitString()[0]).add(it.splitString()[1])
-                    reply("添加\"${it.splitString()[1]}\"到\"${it.splitString()[0]}\"")
-                }
-                else {
-                    testlist.put(it.splitString()[0], mutableListOf(it.splitString()[1]))
-                    reply("添加\"${it.splitString()[1]}\"到\"${it.splitString()[0]}\"")
-                }
+        startsWith("#add", true) {
+            val key = it.split(" ")[0]
+            val value = it.split(" ")[1]
+            if (key != "" && value != "" && !key.contains("#list ") && message[Image]==null) {
+                if (keywordMap.containsKey(key))
+                    keywordMap.getValue(key).add(value)
+                else
+                    keywordMap[key] = mutableListOf(value)
+                saveAutoReplyList()
+                reply("添加\"${value}\"到\"${key}\"")
             }
-
+            if(message[Image]!=null){
+                val str = saveImage(message[Image]!!.queryUrl())
+                if (keywordMap.containsKey(key)) {
+                    if (!(keywordMap.getValue(key).contains(str)))
+                        keywordMap.getValue(key).add(str)
+                }
+                else
+                    keywordMap[key] = mutableListOf(str)
+                saveAutoReplyList()
+                reply("添加\"${value}\"到\"${key}\"")
+            }
+        }
+        startsWith("#del", true) {
+            val key = it.split(" ")[0]
+            val value = it.split(" ")[1]
+            val str = saveImage(message[Image]!!.queryUrl())
+            if(value == "[图片]")
+                keywordMap[key]!!.remove(str)
+            else
+                keywordMap[key]!!.remove(value)
+            if(keywordMap[key].isNullOrEmpty())
+                keywordMap.remove(key)
+            saveAutoReplyList()
+            reply("删除\"$it\"")
+        }
+        startsWith("#list ", true){
+            var rpl = ""
+            if(keywordMap.containsKey(it)){
+                keywordMap[it]!!.forEach {
+                    rpl+=(it+"\n")
+                }
+                reply(rpl)
+            }
         }
     }
 }
 
-fun String.splitString(): Array<String> {
-    if(this.indexOf(" ")!=-1){
-    return arrayOf(this.substring(0,this.indexOf(" ")),(this.substring(this.indexOf(" ")+1)))
+fun saveAutoReplyList() {
+    val writer = autoReplyFile.writer()
+    for (pair in keywordMap) {
+        writer.write(pair.key + " ")
+        for (word in pair.value)
+            writer.write("$word ")
+        writer.write("\n")
     }
-    else return arrayOf("")
+    writer.flush()
+    writer.close()
+}
+/*
+下载图片 并保存为$<md5>.jpg
+ */
+@Throws(IOException::class)
+fun saveImage(imageUrl: String?) : String{
+    var img:File = File("src/img/groupImg/temp.jpg")
+    if(!img.exists())
+        img.createNewFile()
+    val url = URL(imageUrl)
+    val input = url.openStream()
+    val output: OutputStream = FileOutputStream(img)
+    val b = ByteArray(2048)
+    var length: Int
+    var md = MessageDigest.getInstance("MD5")
+    while (input.read(b).also { length = it } != -1) {
+        md.update(b, 0, length)
+        output.write(b, 0, length)
+    }
+    input.close()
+    output.close()
+    val md5Bytes = md.digest()
+    val bigInt :BigInteger = BigInteger(1, md5Bytes)
+    img.renameTo(File("src/img/groupImg/"+"$"+bigInt.toString(16)+".jpg"))
+    return ("$"+bigInt.toString(16))
 }

@@ -11,7 +11,8 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.client.util.store.FileDataStoreFactory
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.SheetsScopes
-import java.io.*
+import java.io.File
+import java.io.InputStreamReader
 import java.util.*
 
 class SheetUtil {
@@ -39,16 +40,18 @@ class SheetUtil {
     private val service = Sheets.Builder(httpTransport, jsonFactory, getCredentials(httpTransport))
             .setApplicationName(appName)
             .build()
-    private val sheet = service.spreadsheets().get(sheetID).execute()
 
-    fun getAbsentList() {
-        val range="时间安排!A4:O100"
-        val values= sheet[range]
-        print(values)
+    fun getAbsentList(): List<Pair<String, String>> {
+        val range = "时间安排!A4:O25"
+        val values = service.spreadsheets().values().get(sheetID, range).execute().getValues() as List<List<String>>
+        val absentList = mutableListOf<Pair<String, String>>()
+        for (row in values)
+            if (row[5] != "C") {
+                val translators = row[12].split(",")
+                for (i in translators.indices)
+                    if (row[i] != "C")
+                        absentList.add(Pair(row[7], translators[i]))
+            }
+        return absentList
     }
-}
-
-fun main() {
-    val sheetUtil = SheetUtil()
-    sheetUtil.getAbsentList()
 }
