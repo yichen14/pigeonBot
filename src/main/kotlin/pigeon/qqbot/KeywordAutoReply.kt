@@ -29,7 +29,7 @@ fun Bot.keywordAutoReply() {
         keywordMap[words[0]] = words.subList(1, words.lastIndex + 1).toMutableList()
     }
     this.subscribeAlways<GroupMessageEvent> {
-        if(subject.id==1143577518L) {
+        if(subject.id==1143577518L || subject.id==596870824L) {
             for((key,value) in keywordMap){
                     if (message.content.indexOf(key) != -1 && message.content.indexOf("#list ") == -1 && message.content.indexOf("#add ") == -1 && message.content.indexOf("#del ") == -1) {
                         try{
