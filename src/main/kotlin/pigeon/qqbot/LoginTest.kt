@@ -23,6 +23,7 @@ suspend fun main() {
     miraiBot.randomRepeat()
     miraiBot.welcome()
     miraiBot.keywordAutoReply()
+    miraiBot.openGame()
     miraiBot.quote()
     miraiBot.push()
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
