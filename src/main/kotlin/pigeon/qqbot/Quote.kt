@@ -13,6 +13,7 @@ fun Bot.quote() {
             val img = message[Image]
             val at = message[At]
             saveImg(img?.queryUrl(), "${at?.target}quotes")
+            reply("添加成功")
         }
         startsWith("#语录") {
             randomImg("${message[At]?.target}quotes")?.sendAsImageTo(subject)
