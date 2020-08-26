@@ -63,13 +63,16 @@ fun Bot.keywordAutoReply() {
         startsWith("#del", true) {
             val key = it.split(" ")[0]
             val value = it.split(" ")[1]
-            val str = getMD5(message[Image]!!.queryUrl())
-            if (value == "[图片]")
+            if (message[Image]!=null) {
+                val str = getMD5(message[Image]!!.queryUrl())
                 keywordMap[key]!!.remove(str)
-            else
+            }
+            else {
                 keywordMap[key]!!.remove(value)
-            if (keywordMap[key].isNullOrEmpty())
+            }
+            if (keywordMap[key].isNullOrEmpty()) {
                 keywordMap.remove(key)
+            }
             saveAutoReplyList()
             reply("删除\"$it\"")
         }
