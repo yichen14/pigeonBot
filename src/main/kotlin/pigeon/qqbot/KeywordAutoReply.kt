@@ -34,6 +34,7 @@ fun Bot.keywordAutoReply() {
                         File("src/img/autoreply/$reply.jpg").sendAsImageTo(subject)
                     else
                         reply(reply)
+                    break
                 }
             }
         }
