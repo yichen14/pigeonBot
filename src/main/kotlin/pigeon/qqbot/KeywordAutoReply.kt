@@ -31,7 +31,7 @@ fun Bot.keywordAutoReply() {
                 if (message.content.indexOf(key) != -1 && !message.content.startsWith("#")) {
                     val reply = value.random()
                     if (reply.startsWith("$"))
-                        File("src/img/groupImg/$reply.jpg").sendAsImageTo(subject)
+                        File("src/img/autoreply/$reply.jpg").sendAsImageTo(subject)
                     else
                         reply(reply)
                 }
