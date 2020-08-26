@@ -5,8 +5,12 @@ import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.data.content
+import net.mamoe.mirai.message.data.Image
+import net.mamoe.mirai.message.data.queryUrl
 import java.io.File
 import java.lang.IllegalArgumentException
+import java.text.SimpleDateFormat
+import java.util.*
 
 var keywordMap = mutableMapOf<String, MutableList<String>>()
 const val autoReplyFilePath = "src/main/resources/autoReply.txt"
@@ -20,7 +24,7 @@ fun Bot.keywordAutoReply() {
         keywordMap[words[0]] = words.subList(1, words.lastIndex + 1).toMutableList()
     }
     this.subscribeAlways<GroupMessageEvent> {
-        if(subject.id==596870824L) {
+        if(subject.id==1143577518L) {
             for((key,value) in keywordMap){
                     if (message.content.indexOf(key) != -1) {
                         try{
@@ -30,7 +34,11 @@ fun Bot.keywordAutoReply() {
                             //do nothing
                         }
                     }
-            }/*
+            }
+            if (message[Image]!=null){
+                reply(message[Image]!!.queryUrl())
+            }
+            /*
             if (keywordMap.contains(message.content)) {
                 reply(keywordMap[message.content]!!.random())//废弃
             }*/
@@ -63,6 +71,7 @@ fun Bot.keywordAutoReply() {
                 reply(rpl)
             }
         }
+
     }
 }
 

@@ -14,14 +14,15 @@ import net.mamoe.mirai.message.sendAsImageTo
 import java.io.File
 
 suspend fun main() {
-    val qqId = 1L//Bot的QQ号，需为Long类型，在结尾处添加大写L
-    val password = ""//Bot的密码
+    val qqId = 3308443151L//Bot的QQ号，需为Long类型，在结尾处添加大写L
+    val password = "Qwerasdf!"//Bot的密码
     val miraiBot = Bot(qqId, password){
         fileBasedDeviceInfo()}.alsoLogin()//新建Bot并登录
     miraiBot.keywordReply()
     miraiBot.randomRepeat()
     miraiBot.welcome()
     miraiBot.keywordAutoReply()
+    miraiBot.openGame()
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
 
