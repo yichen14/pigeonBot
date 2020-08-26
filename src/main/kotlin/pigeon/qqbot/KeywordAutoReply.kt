@@ -91,11 +91,15 @@ fun Bot.keywordAutoReply() {
 
 fun saveAutoReplyList() {
     val writer = autoReplyFile.writer()
+
     for (pair in keywordMap) {
-        writer.write(pair.key + " ")
+        var str = ""
+        str += pair.key + " "
         for (word in pair.value)
-            writer.write("$word ")
-        writer.write("\n")
+            str += "$word "
+        str.trim()
+        str += "\n"
+        writer.write(str)
     }
     writer.flush()
     writer.close()
