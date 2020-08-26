@@ -24,6 +24,7 @@ suspend fun main() {
     miraiBot.welcome()
     miraiBot.keywordAutoReply()
     miraiBot.quote()
+    miraiBot.push()
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
 
