@@ -50,7 +50,7 @@ fun Bot.keywordAutoReply() {
                 saveAutoReplyList()
                 reply("添加\"${value}\"到\"${key}\"")
             } else if (message[Image] != null) {
-                val str = saveImg(message[Image]!!.queryUrl())
+                val str = saveImg(message[Image]!!.queryUrl(), "autoreply")
                 if (keywordMap.containsKey(key)) {
                     if (!(keywordMap.getValue(key).contains(str)))
                         keywordMap.getValue(key).add(str)
@@ -100,8 +100,9 @@ fun saveAutoReplyList() {
 /*
 下载图片 并保存为$<md5>.jpg
  */
-fun saveImg(imageUrl: String): String {
-    val img = File("src/img/groupImg/temp.jpg")
+fun saveImg(imageUrl: String?, path: String): String {
+    val img = File("src/img/$path/temp.jpg")
+    File("src/img/$path").mkdirs()
     if (!img.exists())
         img.createNewFile()
     val input = URL(imageUrl).openStream()
@@ -110,7 +111,7 @@ fun saveImg(imageUrl: String): String {
     val md5 = DigestUtils.md5Hex(input)
     input.close()
     output.close()
-    img.renameTo(File("src/img/groupImg/$$md5.jpg"))
+    img.renameTo(File("src/img/$path/$$md5.jpg"))
     return ("$$md5")
 }
 
