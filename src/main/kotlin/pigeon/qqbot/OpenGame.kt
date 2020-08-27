@@ -2,6 +2,7 @@ package pigeon.qqbot
 
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.event.subscribeMessages
+import net.mamoe.mirai.message.data.At
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -41,24 +42,33 @@ fun Bot.openGame(){
         }
         startsWith("#join", true){
             val sender = this.senderName
-            if(gameWaiting.containsKey(it)){
-                gameWaiting[it]!!.add(sender)
-                if(checkNo(it) != 0){
-                    reply("\"${sender}\"已加入\"${it}\"\n还有\"${checkNo(it)}\"个空位")
-                }else{
-                    var gamer = "@"
-                    for(i in 2..gameWaiting[it]!!.size) {
-                        gamer += gameWaiting[it]!![i]+"\n@"
+            if(gameWaiting.containsKey(it)) {
+                if (checkNo(it) > 0) {
+                    gameWaiting[it]!!.add(sender)
+                    if (checkNo(it) != 0) {
+                        reply("\"${sender}\"已加入\"${it}\"\n还有\"${checkNo(it)}\"个空位")
+                    } else {
+                        var gamer = "@"
+                        for (i in 2 until gameWaiting[it]!!.size) {
+                            gamer += gameWaiting[it]!![i] + "\n@"
+                        }
+                        reply("\"${it}\"人已齐，开局\n\"${gamer}\"")
                     }
-                    reply("\"${it}\"人已齐，开局\n\"${gamer}\"")
+                }else{
+                    reply("残念，人已经满了")
                 }
-            }else{
+            } else {
                 reply("该游戏尚未创建或已过期，请重新创建")
             }
         }
     }
 }
+
 fun checkNo(game: String): Int {
     val length = gameWaiting[game]!!.size
     return gameWaiting[game]!![0].toInt() - length +2
 }
+
+//fun checkTime(game: String): Boolean{
+
+
