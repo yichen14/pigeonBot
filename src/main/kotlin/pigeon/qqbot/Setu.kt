@@ -32,7 +32,7 @@ fun Bot.setu() {
                 when (json?.code) {
                     0 -> {
                         val md5 = saveImg(json.data.random().url, "setu")
-                        File("/src/img/setu/$md5.jpg").sendAsImageTo(subject)
+                        File("src/img/setu/$md5.jpg").sendAsImageTo(subject)
                         lastTime[this.sender.id] = System.currentTimeMillis()
                     }
                     404 -> reply("找不到关键词为${it}的色图")
