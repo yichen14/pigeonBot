@@ -24,7 +24,6 @@ fun Bot.setu() {
             if (lastTime.containsKey(this.sender.id) && System.currentTimeMillis() - lastTime[this.sender.id]!! <= 1000 * 60 * 10) {
                 reply(messageChainOf(PlainText("冲太多了不好哦"), At(this.sender as Member)))
             } else {
-                lastTime[this.sender.id] = System.currentTimeMillis()
                 val http =
                         URL("https://api.lolicon.app/setu/?apikey=432105395f48f8888acb81&keyword=${URLEncoder.encode(it, "UTF-8")}")
                                 .openConnection() as HttpURLConnection
@@ -34,6 +33,7 @@ fun Bot.setu() {
                     0 -> {
                         val md5 = saveImg(json.data.random().url, "setu")
                         File("/src/img/setu/$md5.jpg").sendAsImageTo(subject)
+                        lastTime[this.sender.id] = System.currentTimeMillis()
                     }
                     404 -> reply("找不到关键词为${it}的色图")
                     429 -> reply("今日色图配额已用尽，你们这能冲啊")
