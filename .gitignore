@@ -4,3 +4,4 @@ build/
 .idea/
 tokens/
 src/img/
+src/main/resources/autoReply.txt
