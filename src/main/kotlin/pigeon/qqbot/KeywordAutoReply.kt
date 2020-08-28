@@ -64,12 +64,11 @@ fun Bot.keywordAutoReply() {
         startsWith("#del", true) {
             val key = it.split(" ")[0]
             val value = it.split(" ")[1]
-            if (message[Image]!=null) {
+            if (message[Image] != null) {
                 val str = getMD5(message[Image]!!.queryUrl())
-                keywordMap[key]!!.remove(str)
-            }
-            else {
-                keywordMap[key]!!.remove(value)
+                keywordMap[key]?.remove(str)
+            } else {
+                keywordMap[key]?.remove(value)
             }
             if (keywordMap[key].isNullOrEmpty()) {
                 keywordMap.remove(key)
@@ -110,7 +109,9 @@ fun saveAutoReplyList() {
  */
 fun saveImg(imageUrl: String?, path: String): String {
     val img = File("src/img/$path/temp.jpg")
-    File("src/img/$path").mkdirs()
+    val parentFolder = File("src/img/$path")
+    if (!parentFolder.exists())
+        parentFolder.mkdirs()
     if (!img.exists())
         img.createNewFile()
     val input = URL(imageUrl).openStream()
