@@ -117,9 +117,13 @@ fun saveImg(imageUrl: String?, path: String): String {
     val input = URL(imageUrl).openStream()
     val output = FileOutputStream(img)
     input.copyTo(output)
-    val md5 = DigestUtils.md5Hex(input)
     input.close()
     output.close()
+    val md5: String
+    img.inputStream().let {
+        md5 = DigestUtils.md5Hex(it)
+        it.close()
+    }
     img.renameTo(File("src/img/$path/$$md5.jpg"))
     return ("$$md5")
 }
