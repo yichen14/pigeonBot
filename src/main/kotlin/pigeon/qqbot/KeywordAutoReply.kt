@@ -78,12 +78,14 @@ fun Bot.keywordAutoReply() {
         }
         startsWith("#list ", true) { it ->
             var rpl = ""
-            if (keywordMap.containsKey(it)) {
-                keywordMap[it]!!.forEach {
-                    rpl += "$it\n"
-                }
-                reply(rpl)
-            }
+            if (it.isNotBlank()) {
+                if (keywordMap.containsKey(it))
+                    keywordMap[it]?.forEach { key -> rpl += "$key\n" }
+                else
+                    rpl="未找到关键字$it"
+            } else
+                keywordMap.keys.forEach { key -> rpl += "$key\n" }
+            reply(rpl)
         }
     }
 }
