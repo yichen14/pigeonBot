@@ -28,9 +28,8 @@ fun Bot.setu() {
                 reply(messageChainOf(PlainText("冲太多了不好哦"), At(this.sender as Member)))
             } else if (it.contains("danbooru")) {
                 val xp = URLEncoder.encode(it.replace("danbooru", "").trim().replace(" ", "_"), "UTF-8")
-                val http =
-                        URL("https://danbooru.donmai.us/posts.json?tags=$xp")
-                                .openConnection() as HttpURLConnection
+                val http = URL("https://danbooru.donmai.us/posts.json?tags=$xp")
+                        .openConnection() as HttpURLConnection
                 http.requestMethod = "GET"
                 val json = Klaxon().parseArray<DanbooruImg>(http.inputStream)
                 if (json?.isEmpty()!!)
@@ -52,7 +51,7 @@ fun Bot.setu() {
                         File("src/img/setu/$md5.jpg").sendAsImageTo(subject)
                         lastTime[this.sender.id] = System.currentTimeMillis()
                     }
-                    404 -> reply("找不到关键词为${xp}的色图")
+                    404 -> reply("找不到关键词为${it}的色图")
                     429 -> reply("今日色图配额已用尽，你们真能冲啊")
                 }
             }
