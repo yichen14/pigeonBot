@@ -11,11 +11,18 @@ import net.mamoe.mirai.join
 import net.mamoe.mirai.message.GroupMessageEvent
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.sendAsImageTo
+import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.constructor.Constructor
 import java.io.File
 
+data class Config(var qqID: Long = 0, var password: String = "")
+
+const val configPath = "src/main/resources/config.yml"
+
 suspend fun main() {
-    val qqId = 3308443151L//Bot的QQ号，需为Long类型，在结尾处添加大写L
-    val password = "!"//Bot的密码
+    val config = Yaml(Constructor(Config::class.java)).load(File(configPath).inputStream()) as Config
+    val qqId = config.qqID//Bot的QQ号，需为Long类型，在结尾处添加大写L
+    val password = config.password//Bot的密码
     val miraiBot = Bot(qqId, password) {
         fileBasedDeviceInfo()
     }.alsoLogin()//新建Bot并登录
