@@ -49,7 +49,7 @@ fun Bot.setu() {
                                     .openConnection() as HttpURLConnection
                             http.requestMethod = "GET"
                             val json = Klaxon().parse<PixivIcRpl>(http.inputStream)
-                            val url=json?.data?.random()?.imageUrls?.random()?.original
+                            val url= json?.data?.get((0..5).random())?.imageUrls?.random()?.original
                             val md5 = saveImg(url?.replace("pximg.net","pixiv.cat"), "setu")
                             File("src/img/setu/$md5.jpg").sendAsImageTo(subject)
                         } catch(e: Exception) {
