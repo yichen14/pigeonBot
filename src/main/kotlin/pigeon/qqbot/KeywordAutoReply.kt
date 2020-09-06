@@ -22,13 +22,13 @@ val autoReplyFile = File(autoReplyFilePath)
 
 fun Bot.keywordAutoReply() {
     for (line in autoReplyFile.readLines()) {
-        val words = line.split(" ")
+        val words = line.trim().split(" ")
         keywordMap[words[0]] = words.subList(1, words.lastIndex + 1).toMutableList()
     }
     this.subscribeAlways<GroupMessageEvent> {
-        if (subject.id == 1143577518L || subject.id == 596870824L) {
+        if (subject.id == 1143577518L || subject.id == 596870824L)
             for ((key, value) in keywordMap) {
-                if (message.content.indexOf(key) != -1 && !message.content.startsWith("#")) {
+                if (message.content.contains(key) && !message.content.startsWith("#")) {
                     val reply = value.random()
                     if (reply.startsWith("$"))
                         File("src/img/autoreply/$reply.jpg").sendAsImageTo(subject)
@@ -37,7 +37,6 @@ fun Bot.keywordAutoReply() {
                     break
                 }
             }
-        }
     }
     this.subscribeMessages {
         startsWith("#add", true) {
@@ -45,7 +44,7 @@ fun Bot.keywordAutoReply() {
             val value = it.split(" ")[1]
             if (key != "" && value != "" && message[Image] == null) {
                 if (keywordMap.containsKey(key))
-                    keywordMap.getValue(key).add(value)
+                    keywordMap[key]?.add(value)
                 else
                     keywordMap[key] = mutableListOf(value)
                 saveAutoReplyList()
@@ -67,12 +66,10 @@ fun Bot.keywordAutoReply() {
             if (message[Image] != null) {
                 val str = getMD5(message[Image]!!.queryUrl())
                 keywordMap[key]?.remove(str)
-            } else {
+            } else
                 keywordMap[key]?.remove(value)
-            }
-            if (keywordMap[key].isNullOrEmpty()) {
+            if (keywordMap[key].isNullOrEmpty())
                 keywordMap.remove(key)
-            }
             saveAutoReplyList()
             reply("删除\"$it\"")
         }
@@ -82,7 +79,7 @@ fun Bot.keywordAutoReply() {
                 if (keywordMap.containsKey(it))
                     keywordMap[it]?.forEach { key -> rpl += "$key\n" }
                 else
-                    rpl="未找到关键字$it"
+                    rpl = "未找到关键字$it"
             } else
                 keywordMap.keys.forEach { key -> rpl += "$key\n" }
             reply(rpl)
@@ -92,7 +89,6 @@ fun Bot.keywordAutoReply() {
 
 fun saveAutoReplyList() {
     val writer = autoReplyFile.writer()
-
     for (pair in keywordMap) {
         var str = ""
         str += pair.key + " "
