@@ -70,15 +70,13 @@ fun Bot.keywordAutoReply() {
             reply("删除\"$it\"")
         }
         startsWith("#list ", true) {
-            var rpl = ""
-            if (it.isNotBlank()) {
+            reply(if (it.isNotBlank()) {
                 if (keywordMap.containsKey(it))
-                    keywordMap[it]?.forEach { key -> rpl += "$key\n" }
+                    keywordMap[it].toString()
                 else
-                    rpl = "未找到关键字$it"
+                    "未找到关键字$it"
             } else
-                keywordMap.keys.forEach { key -> rpl += "$key\n" }
-            reply(rpl)
+            keywordMap.keys.toString())
         }
     }
 }
