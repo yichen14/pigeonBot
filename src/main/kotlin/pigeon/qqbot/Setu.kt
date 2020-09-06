@@ -45,7 +45,7 @@ fun Bot.setu() {
                         try {
                             xp=xp.replace("pixivic","").trim()
                             val http =
-                                URL("https://api.pixivic.com/illustrations?keyword=$xp&page=1&searchType=autoTranslate&illustType=illust")
+                                URL("https://api.pixivic.com/illustrations?keyword=$xp&page=1&illustType=illust")
                                     .openConnection() as HttpURLConnection
                             http.requestMethod = "GET"
                             val json = Klaxon().parse<PixivIcRpl>(http.inputStream)
