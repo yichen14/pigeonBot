@@ -9,22 +9,18 @@ import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.message.data.queryUrl
 import net.mamoe.mirai.message.sendAsImageTo
 import org.apache.commons.codec.digest.DigestUtils
+import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.constructor.Constructor
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
 
-
 var keywordMap = mutableMapOf<String, MutableList<String>>()
-const val autoReplyFilePath = "src/main/resources/autoReply.txt"
+const val autoReplyFilePath = "src/main/resources/autoReply.yml"
 val autoReplyFile = File(autoReplyFilePath)
 
-//TODO: 语录上传
-
 fun Bot.keywordAutoReply() {
-    for (line in autoReplyFile.readLines()) {
-        val words = line.trim().split(" ")
-        keywordMap[words[0]] = words.subList(1, words.lastIndex + 1).toMutableList()
-    }
+    keywordMap=Yaml(Constructor(MutableMap::class.java)).load(autoReplyFile.inputStream())as MutableMap<String, MutableList<String>>
     this.subscribeAlways<GroupMessageEvent> {
         if (subject.id == 1143577518L || subject.id == 596870824L)
             for ((key, value) in keywordMap) {
@@ -47,7 +43,7 @@ fun Bot.keywordAutoReply() {
                     keywordMap[key]?.add(value)
                 else
                     keywordMap[key] = mutableListOf(value)
-                saveAutoReplyList()
+                Yaml().dump(keywordMap, autoReplyFile.writer())
                 reply("添加\"${value}\"到\"${key}\"")
             } else if (message[Image] != null) {
                 val str = saveImg(message[Image]!!.queryUrl(), "autoreply")
@@ -56,7 +52,7 @@ fun Bot.keywordAutoReply() {
                         keywordMap.getValue(key).add(str)
                 } else
                     keywordMap[key] = mutableListOf(str)
-                saveAutoReplyList()
+                Yaml().dump(keywordMap, autoReplyFile.writer())
                 reply("添加\"${value}\"到\"${key}\"")
             }
         }
@@ -70,10 +66,10 @@ fun Bot.keywordAutoReply() {
                 keywordMap[key]?.remove(value)
             if (keywordMap[key].isNullOrEmpty())
                 keywordMap.remove(key)
-            saveAutoReplyList()
+            Yaml().dump(keywordMap, autoReplyFile.writer())
             reply("删除\"$it\"")
         }
-        startsWith("#list ", true) { it ->
+        startsWith("#list ", true) {
             var rpl = ""
             if (it.isNotBlank()) {
                 if (keywordMap.containsKey(it))
@@ -87,20 +83,6 @@ fun Bot.keywordAutoReply() {
     }
 }
 
-fun saveAutoReplyList() {
-    val writer = autoReplyFile.writer()
-    for (pair in keywordMap) {
-        var str = ""
-        str += pair.key + " "
-        for (word in pair.value)
-            str += "$word "
-        str.trim()
-        str += "\n"
-        writer.write(str)
-    }
-    writer.flush()
-    writer.close()
-}
 
 /*
 下载图片 并保存为$<md5>.jpg
