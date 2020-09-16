@@ -20,17 +20,20 @@ const val autoReplyFilePath = "src/main/resources/autoReply.yml"
 val autoReplyFile = File(autoReplyFilePath)
 
 fun Bot.keywordAutoReply() {
+    var autoReplyPossibility = 100
     keywordMap=Yaml(Constructor(MutableMap::class.java)).load(autoReplyFile.inputStream())as MutableMap<String, MutableList<String>>
     this.subscribeAlways<GroupMessageEvent> {
         if (subject.id == 1143577518L || subject.id == 596870824L)
             for ((key, value) in keywordMap) {
-                if (message.content.contains(key) && !message.content.startsWith("#")) {
-                    val reply = value.random()
-                    if (reply.startsWith("$"))
-                        File("src/img/autoreply/$reply.jpg").sendAsImageTo(subject)
-                    else
-                        reply(reply)
-                    break
+                if ((1..100).random()<=autoReplyPossibility) {
+                    if (message.content.contains(key) && !message.content.startsWith("#")) {
+                        val reply = value.random()
+                        if (reply.startsWith("$"))
+                            File("src/img/autoreply/$reply.jpg").sendAsImageTo(subject)
+                        else
+                            reply(reply)
+                        break
+                    }
                 }
             }
     }
@@ -77,6 +80,17 @@ fun Bot.keywordAutoReply() {
                     "未找到关键字$it"
             } else
             keywordMap.keys.toString())
+        }
+        startsWith("#config ", true){
+            val key = it.split(" ")[0]
+            val value = it.split(" ")[1]
+            if (key == "possibility"){
+                if (value.toInt() in 1..100)
+                {
+                    autoReplyPossibility = value.toInt()
+                    reply("自动回复概率改为$value%")
+                }
+            }
         }
     }
 }
