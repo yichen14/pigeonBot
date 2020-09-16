@@ -42,20 +42,11 @@ fun randomImg(path: String) = File("src/img/$path").listFiles()?.random()
 
 fun Bot.keywordReply() {
     this.subscribeMessages {
-        case("at me") {
-            reply(At(sender as Member) + " 给爷爬 ")
-        }
         case("#查询二次元浓度") {
             reply("${(0..100).random()}%")
         }
-        contains("veraku", true) {
-            reply("veraku是神")
-        }
         contains("nmsl") {
             reply("nmysl")
-        }
-        contains("不行") {
-            reply("不许不行")
         }
         case("芳芳") {
             reply("芳芳是神")
