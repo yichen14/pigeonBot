@@ -30,15 +30,15 @@ suspend fun main() {
     miraiBot.randomRepeat()
     miraiBot.welcome()
     miraiBot.keywordAutoReply()
+    delay(2000L)
+    miraiBot.LiveStreamDetect(3484)
     miraiBot.openGame()
     miraiBot.quote()
     miraiBot.push()
     miraiBot.setu()
-    //miraiBot.LiveStreamDetect(3484)
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
 
-//
 fun randomImg(path: String) = File("src/img/$path").listFiles()?.random()
 
 fun Bot.keywordReply() {

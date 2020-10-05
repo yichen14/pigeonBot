@@ -11,9 +11,10 @@ data class Douyu(val error: Int, val data: data)
 data class data(val room_status: String)
 
 
-/*
+
 fun Bot.LiveStreamDetect(roomNumber:Int){
-        var liveStatus: String = "0"
+    GlobalScope.launch{
+    var liveStatus: String = "0"
         while (true) {
             val http =
                     URL("http://open.douyucdn.cn/api/RoomApi/room/$roomNumber")
@@ -26,8 +27,9 @@ fun Bot.LiveStreamDetect(roomNumber:Int){
                     getGroup(1143577518L).sendMessage("$roomNumber 播了")
                 } else {
                     liveStatus = json.data.room_status
-                    getFriend(2211584273L).sendMessage("myb")
                 }
             }
+            delay(60000L)
         }
-    }*/
+    }
+}

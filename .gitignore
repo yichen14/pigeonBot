@@ -5,3 +5,4 @@ build/
 tokens/
 src/img/
 src/main/resources/autoReply.txt
+gradlew

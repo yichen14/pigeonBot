@@ -24,7 +24,6 @@ private val lastTime = mutableMapOf<Long, Long>()
 
 fun Bot.setu() {
     this.subscribeMessages {
-
             startsWith("#色图", true) {
             if (lastTime.containsKey(this.sender.id) && System.currentTimeMillis() - lastTime[this.sender.id]!! <= 1000 * 60 * 10) {
                 reply(messageChainOf(PlainText("冲太多了不好哦"), At(this.sender as Member)))
