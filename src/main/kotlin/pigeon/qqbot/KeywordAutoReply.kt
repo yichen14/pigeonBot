@@ -21,11 +21,12 @@ val autoReplyFile = File(autoReplyFilePath)
 
 fun Bot.keywordAutoReply() {
     var autoReplyPossibility = 100
-    keywordMap=Yaml(Constructor(MutableMap::class.java)).load(autoReplyFile.inputStream())as MutableMap<String, MutableList<String>>
+    keywordMap =
+        Yaml(Constructor(MutableMap::class.java)).load(autoReplyFile.inputStream()) as MutableMap<String, MutableList<String>>
     this.subscribeAlways<GroupMessageEvent> {
         if (subject.id == 1143577518L || subject.id == 596870824L)
             for ((key, value) in keywordMap) {
-                if ((1..100).random()<=autoReplyPossibility) {
+                if ((1..100).random() <= autoReplyPossibility) {
                     if (message.content.contains(key) && !message.content.startsWith("#")) {
                         val reply = value.random()
                         if (reply.startsWith("$"))
@@ -73,23 +74,22 @@ fun Bot.keywordAutoReply() {
             reply("删除\"$it\"")
         }
         startsWith("#list ", true) {
-            reply(if (it.isNotBlank()) {
-                if (keywordMap.containsKey(it))
-                    keywordMap[it].toString()
-                else
-                    "未找到关键字$it"
-            } else
-            keywordMap.keys.toString())
+            reply(
+                if (it.isNotBlank()) {
+                    if (keywordMap.containsKey(it))
+                        keywordMap[it].toString()
+                    else
+                        "未找到关键字$it"
+                } else
+                    keywordMap.keys.toString()
+            )
         }
-        startsWith("#config ", true){
+        startsWith("#config ", true) {
             val key = it.split(" ")[0]
             val value = it.split(" ")[1]
-            if (key == "possibility"){
-                if (value.toInt() in 1..100)
-                {
-                    autoReplyPossibility = value.toInt()
-                    reply("自动回复概率改为$value%")
-                }
+            if (key == "possibility" && value.toInt() in 1..100) {
+                autoReplyPossibility = value.toInt()
+                reply("自动回复概率改为$value%")
             }
         }
     }
