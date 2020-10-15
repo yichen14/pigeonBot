@@ -35,7 +35,7 @@ suspend fun main() {
     miraiBot.push()
     miraiBot.setu()
     delay(3000L)
-    miraiBot.LiveStreamDetect(6979222)//6979222
+    miraiBot.liveStreamDetect(6979222)//6979222
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
 
