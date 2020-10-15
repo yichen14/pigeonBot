@@ -32,6 +32,7 @@ suspend fun main() {
     miraiBot.keywordAutoReply()
     delay(2000L)
     miraiBot.LiveStreamDetect(6979222)
+    delay(2000L)
     miraiBot.openGame()
     miraiBot.quote()
     miraiBot.push()
