@@ -9,7 +9,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import net.mamoe.mirai.Bot
 data class Douyu(val error: Int, val data: data)
-data class data(val room_status: String)
+data class data(val room_name:String, val room_status: String)
 
 
 fun Bot.LiveStreamDetect(roomNumber:Int) = runBlocking<Unit> {
@@ -24,7 +24,7 @@ fun Bot.LiveStreamDetect(roomNumber:Int) = runBlocking<Unit> {
             if (json?.error == 0) {
                 if (json.data.room_status == "1" && json.data.room_status != liveStatus) {
                     liveStatus = json.data.room_status
-                    getGroup(596870824).sendMessage("$roomNumber 播了")
+                    getGroup(596870824L).sendMessage("$roomNumber 播了\n${json.data.room_name}")
                 } else {
                     liveStatus = json.data.room_status
                 }
