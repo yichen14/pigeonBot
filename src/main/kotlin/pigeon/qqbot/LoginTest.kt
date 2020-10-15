@@ -30,13 +30,12 @@ suspend fun main() {
     miraiBot.randomRepeat()
     miraiBot.welcome()
     miraiBot.keywordAutoReply()
-    delay(2000L)
-    miraiBot.LiveStreamDetect(6979222)
-    delay(2000L)
     miraiBot.openGame()
     miraiBot.quote()
     miraiBot.push()
     miraiBot.setu()
+    delay(3000L)
+    miraiBot.LiveStreamDetect(6979222)//6979222
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
 
