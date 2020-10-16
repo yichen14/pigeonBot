@@ -16,7 +16,7 @@ fun Bot.liveStreamDetect(roomNumber: Int) {
             val json = getJson<Douyu>("http://open.douyucdn.cn/api/RoomApi/room/$roomNumber")
             if (json?.error == 0) {
                 if (json.data.room_status == "1" && json.data.room_status != liveStatus)
-                    getGroup(596870824L).sendMessage("$roomNumber 播了")
+                    getGroup(596870824L).sendMessage("wjqbl\n${json.data.room_name}")
                 liveStatus = json.data.room_status
             }
             delay(100000L)//100s
