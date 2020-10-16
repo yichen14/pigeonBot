@@ -61,7 +61,7 @@ fun Bot.setu() {
     }
 }
 
-private inline fun <reified json> getJson(url: String): json? {
+inline fun <reified json> getJson(url: String): json? {
     val http = URL(url).openConnection() as HttpURLConnection
     http.requestMethod = "GET"
     return Klaxon().parse<json>(http.inputStream)
