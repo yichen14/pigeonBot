@@ -19,7 +19,7 @@ fun Bot.liveStreamDetect(roomNumber: Int) {
                     getGroup(596870824L).sendMessage("$roomNumber 播了")
                 liveStatus = json.data.room_status
             }
-            delay(1000L)
+            delay(100000L)//100s
         }
     }
 }
