@@ -11,11 +11,13 @@ import net.mamoe.mirai.message.sendAsImageTo
 fun Bot.quote() {
     this.subscribeMessages {
         startsWith("#上传语录") {
-            if(message[At]!=null) {
+            if(message[At]!=null && message[Image] != null) {
                 val img = message[Image]
                 val at = message[At]
-                saveImg(img?.queryUrl(), "${at?.target}quotes")
+                val md5 = saveImg(img?.queryUrl(), "${at?.target}quotes")
                 reply("添加成功")
+            }else{
+                reply("添加失败 缺少图片或用户信息")
             }
         }
         startsWith("#语录") {
