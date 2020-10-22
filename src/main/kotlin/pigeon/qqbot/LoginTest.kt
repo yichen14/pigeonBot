@@ -14,11 +14,12 @@ import net.mamoe.mirai.message.sendAsImageTo
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 import java.io.File
+import kotlin.random.Random
 
 data class Config(var qqID: Long = 0, var password: String = "")
 
 const val configPath = "src/main/resources/config.yml"
-
+var randomRepeatProbability = 0.6
 suspend fun main() {
     val config = Yaml(Constructor(Config::class.java)).load(File(configPath).inputStream()) as Config
     val qqId = config.qqID//Bot的QQ号，需为Long类型，在结尾处添加大写L
@@ -62,8 +63,8 @@ fun Bot.keywordReply() {
 
 fun Bot.randomRepeat() {
     this.subscribeAlways<GroupMessageEvent> {
-        if ((1..50).random() == 1) {
-            reply(message)//2%概率复读
+        if (Random.nextDouble(1.0,100.0) <= randomRepeatProbability) {
+            reply(message)
         }
     }
 }
