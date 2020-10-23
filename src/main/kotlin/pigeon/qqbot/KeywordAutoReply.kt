@@ -14,21 +14,22 @@ import org.yaml.snakeyaml.constructor.Constructor
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
+import kotlin.random.Random
 
 var keywordMap = mutableMapOf<String, MutableList<String>>()
 const val autoReplyFilePath = "src/main/resources/autoReply.yml"
 val autoReplyFile = File(autoReplyFilePath)
 
 fun Bot.keywordAutoReply() {
-    var autoReplyPossibility = 100
+    var autoReplyPossibility = 100.0
     keywordMap =
         Yaml(Constructor(MutableMap::class.java)).load(autoReplyFile.inputStream()) as MutableMap<String, MutableList<String>>
     this.subscribeAlways<GroupMessageEvent> {
         if (subject.id == 1143577518L || subject.id == 596870824L)
             for ((key, value) in keywordMap) {
-                if ((1..100).random() <= autoReplyPossibility) {
+                if (Random.nextDouble(1.0,100.0) <= autoReplyPossibility) {
                     if (message.content.contains(key) && !message.content.startsWith("#")) {
-                        val reply = value.random()
+                        val reply = value.random    ()
                         if (reply.startsWith("$"))
                             File("src/img/autoreply/$reply.jpg").sendAsImageTo(subject)
                         else
@@ -87,9 +88,13 @@ fun Bot.keywordAutoReply() {
         startsWith("#config ", true) {
             val key = it.split(" ")[0]
             val value = it.split(" ")[1]
-            if (key == "possibility" && value.toInt() in 1..100) {
-                autoReplyPossibility = value.toInt()
+            if (key == "replyP" && value.toDouble() in 1.0..100.0) {
+                autoReplyPossibility = value.toDouble()
                 reply("自动回复概率改为$value%")
+            }
+            if (key == "repeatP" && value.toDouble() in 1.0..100.0) {
+                randomRepeatProbability = value.toDouble()
+                reply("自动复读概率改为$value%")
             }
         }
     }
