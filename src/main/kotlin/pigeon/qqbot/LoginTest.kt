@@ -72,7 +72,7 @@ fun Bot.randomRepeat() {
         startsWith("#config ", true) {
             val key = it.split(" ")[0]
             val value = it.split(" ")[1]
-            if (key == "repeatP" && value.toDouble() in 1.0..100.0) {
+            if (key == "repeatP" && value.toDouble() in 0.0..100.0) {
                 randomRepeatProbability = value.toDouble()
                 reply("自动复读概率改为$value%")
             }

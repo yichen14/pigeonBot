@@ -1,6 +1,13 @@
 package pigeon.qqbot
 
-import java.util.*
+import net.mamoe.mirai.Bot
+import net.mamoe.mirai.event.subscribeAlways
+import net.mamoe.mirai.event.subscribeMessages
+import net.mamoe.mirai.message.GroupMessageEvent
+import net.mamoe.mirai.message.data.Image
+import net.mamoe.mirai.message.data.content
+import net.mamoe.mirai.message.data.queryUrl
+import net.mamoe.mirai.message.sendAsImageTo
 
 class QuoteClass {
     private var content = "";
@@ -22,6 +29,10 @@ class QuoteClass {
         return this.md5;
     }
 
+    fun printInfo():String{
+        val info = "Quote Object Info: memberQQ["+this.memberQQ+"]; md5["+this.md5+"]; content["+this.content+"]"
+        return info
+    }
     /*
     * Using OCR to recognize word content
     * */

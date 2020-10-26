@@ -88,7 +88,7 @@ fun Bot.keywordAutoReply() {
         startsWith("#config ", true) {
             val key = it.split(" ")[0]
             val value = it.split(" ")[1]
-            if (key == "replyP" && value.toDouble() in 1.0..100.0) {
+            if (key == "replyP" && value.toDouble() in 0.00..100.00) {
                 autoReplyPossibility = value.toDouble()
                 reply("自动回复概率改为$value%")
             }
