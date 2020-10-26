@@ -92,10 +92,6 @@ fun Bot.keywordAutoReply() {
                 autoReplyPossibility = value.toDouble()
                 reply("自动回复概率改为$value%")
             }
-            if (key == "repeatP" && value.toDouble() in 1.0..100.0) {
-                randomRepeatProbability = value.toDouble()
-                reply("自动复读概率改为$value%")
-            }
         }
     }
 }
