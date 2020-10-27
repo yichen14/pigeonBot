@@ -29,7 +29,7 @@ fun Bot.keywordAutoReply() {
             for ((key, value) in keywordMap) {
                 if (Random.nextDouble(1.0,100.0) <= autoReplyPossibility) {
                     if (message.content.contains(key) && !message.content.startsWith("#")) {
-                        val reply = value.random    ()
+                        val reply = value.random()
                         if (reply.startsWith("$"))
                             File("src/img/autoreply/$reply.jpg").sendAsImageTo(subject)
                         else
