@@ -6,6 +6,8 @@ Based on Mirai.
 * Shucheng Fang
 * Xudong Xiao
 * Yichen Lu
+* Wenshu Gao
+* Yusheng Zhao
 
 ## 开发计划
 ### 主要功能
@@ -18,10 +20,13 @@ Based on Mirai.
 * 查询二次元浓度
 * 全自动色图（从pixiv上爬取对应群友xp的色图 定时发送）
 * 随机复读群聊文本消息  
+* 检测直播间开播
 
 ### 未完成功能
-* 检测直播间开播
 * 骰子功能
-* 支持搜索语录
 * NLP
 * 游戏凑局
+
+### 正在开发功能  
+* 支持搜索语录(OCR)   
+* Help功能完善  
