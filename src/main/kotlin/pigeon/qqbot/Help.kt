@@ -2,9 +2,8 @@ package pigeon.qqbot
 
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.event.subscribeMessages
-import net.mamoe.mirai.message.sendAsImageTo
 
-fun Bot.Help(){
+fun Bot.help(){
     this.subscribeMessages {
         case("#help"){
             reply("鸽舍bot说明:\n" +
