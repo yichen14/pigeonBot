@@ -8,5 +8,8 @@ fun Bot.misc() {
         case("#查询二次元浓度") {
             reply("${(0..100).random()}%")
         }
+        case("nmsl"){
+            reply("nmysl")
+        }
     }
 }
