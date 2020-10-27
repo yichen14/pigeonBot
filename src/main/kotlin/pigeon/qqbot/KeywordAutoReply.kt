@@ -29,7 +29,7 @@ fun Bot.keywordAutoReply() {
             for ((key, value) in keywordMap) {
                 if (Random.nextDouble(1.0,100.0) <= autoReplyPossibility) {
                     if (message.content.contains(key) && !message.content.startsWith("#")) {
-                        val reply = value.random    ()
+                        val reply = value.random()
                         if (reply.startsWith("$"))
                             File("src/img/autoreply/$reply.jpg").sendAsImageTo(subject)
                         else
@@ -88,13 +88,9 @@ fun Bot.keywordAutoReply() {
         startsWith("#config ", true) {
             val key = it.split(" ")[0]
             val value = it.split(" ")[1]
-            if (key == "replyP" && value.toDouble() in 1.0..100.0) {
+            if (key == "replyP" && value.toDouble() in 0.00..100.00) {
                 autoReplyPossibility = value.toDouble()
                 reply("自动回复概率改为$value%")
-            }
-            if (key == "repeatP" && value.toDouble() in 1.0..100.0) {
-                randomRepeatProbability = value.toDouble()
-                reply("自动复读概率改为$value%")
             }
         }
     }
@@ -126,3 +122,5 @@ fun saveImg(imageUrl: String?, path: String): String {
 }
 
 fun getMD5(imageUrl: String?): String = DigestUtils.md5Hex(URL(imageUrl).openStream())
+
+fun randomImg(path: String) = File("src/img/$path").listFiles()?.random()
