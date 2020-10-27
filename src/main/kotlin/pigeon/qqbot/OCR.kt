@@ -1,50 +1,56 @@
 package pigeon.qqbot
 
-import com.beust.klaxon.JsonValue
+import com.google.gson.Gson
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.message.data.Image
-import java.io.File
+import net.mamoe.mirai.message.data.queryUrl
 import okhttp3.*
 
-class OCR {
-    private val apiKey = "140b4b8ee688957"
-    private val url = "https://api.ocr.space/parse/image"
-    private val lang = "chs"
-    val client = new OkHttpClient()
+data class OCRdata(val ParsedResults: PR,val OCRExitCode: Int,val IsErroredOnProcessing: Boolean,var SearchablePDFURL:String)
+{
+    data class PR(val TextOverlay:String,val TextOrientation: String,val FileParseExitCode: Int, val ParsedText: String,val ErrorMessage: String,val ErrorDetails:String
+    )
+}
+const val apiKey = "140b4b8ee688957"
+const val url = "https://api.ocr.space/parse/image"
+const val lang = "chs"
 
-    val request = new Request.Builder()
+fun Bot.ocr(){
+    this.subscribeMessages{
+        startsWith("#OCR"){
+            if(message[Image] != null) {
+                val img = message[Image]
+                val md5 = saveImg(img?.queryUrl(),"114514")
+                val text = fetchJson("src/img/114514/$md5.jpg")
+                reply(text)
+            }
+            else{
+                reply("ERROR")
+            }
+        }
+    }
+}
+
+fun fetchJson(imageUrl: String):String{
+    val request = Request.Builder()
         .url(url)
         .header("apikey", apiKey)
         .header("language",lang)
+        .header("url",imageUrl)
         .build()
 
-    private fun fetchJson(imageUrl: String?):String{
-        request.add("url",imageUrl)
-        Response response = client.newCall(request).execute();
-        if (response.has("ErrorMessage")){
-            val error = response.getString("ErrorMessage")
-            return error
-        }
-        else{
-            val text = response.getString("ParsedText")
-            return text
-        }
+    val client = OkHttpClient()
 
+    val response = client.newCall(request).execute().body().toString()
+    val gson = Gson()
+    val json = gson.fromJson<OCRdata>(response,OCRdata::class.java)
+
+    if (json.ParsedResults.ErrorMessage!=null){
+        return json.ParsedResults.ErrorMessage
     }
-    fun Bot.OCR(){
-        this.subscribeMessages{
-            startsWith("#OCR"){
-                if（message[Image] != null） {
-                    val img = message[Image]
-                    val md5 = saveImg(img?.queryUrl(),"114514")
-                    val text = fetchJson(File("src/img/114514/$md5.jpg"))
-                    reply(text) 
-                }
-                else{
-                    reply("ERROR")
-                }
-            }
-        }   
+    else{
+        return json.ParsedResults.ParsedText
     }
+
 }
