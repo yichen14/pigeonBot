@@ -122,3 +122,5 @@ fun saveImg(imageUrl: String?, path: String): String {
 }
 
 fun getMD5(imageUrl: String?): String = DigestUtils.md5Hex(URL(imageUrl).openStream())
+
+fun randomImg(path: String) = File("src/img/$path").listFiles()?.random()
