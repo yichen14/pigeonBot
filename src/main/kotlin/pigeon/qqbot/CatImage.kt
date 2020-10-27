@@ -6,7 +6,7 @@ import net.mamoe.mirai.message.sendAsImageTo
 
 fun Bot.catImage() {
     this.subscribeMessages {
-        (contains("fm") or contains("fdm")) {
+        (case("fm") or case("fdm")) {
             randomImg("cats")?.sendAsImageTo(subject)
         }
     }
