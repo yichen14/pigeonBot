@@ -1,12 +1,14 @@
 package pigeon.qqbot
 
-import com.sun.org.apache.bcel.internal.util.SecuritySupport.getResourceAsStream
 import edu.stanford.nlp.ling.CoreAnnotations
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation
 import edu.stanford.nlp.ling.CoreLabel
 import edu.stanford.nlp.pipeline.Annotation
 import edu.stanford.nlp.pipeline.StanfordCoreNLP
 import edu.stanford.nlp.util.CoreMap
+import jdk.xml.internal.SecuritySupport.getResourceAsStream
+//import jdk.jfr.internal.SecuritySupport.getResourceAsStream
+//import com.sun.org.apache.bcel.internal.util.SecuritySupport.getResourceAsStream
 import java.util.*
 import kotlin.collections.ArrayList
 
