@@ -28,6 +28,6 @@ suspend fun main() {
     miraiBot.misc()
     miraiBot.help()
     miraiBot.smartReply()
-    miraiBot.ocr() //测试中，暂不上线
+    miraiBot.ocr() //测试中
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
