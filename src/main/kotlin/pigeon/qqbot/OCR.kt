@@ -7,9 +7,20 @@ import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.queryUrl
 import okhttp3.*
 
-data class OCRdata(val ParsedResults: PR,val OCRExitCode: Int,val IsErroredOnProcessing: Boolean,var SearchablePDFURL:String)
+data class OCRdata(
+        val ParsedResults: PR,
+        val OCRExitCode: Int,
+        val IsErroredOnProcessing: Boolean,
+        var SearchablePDFURL:String
+)
 {
-    data class PR(val TextOverlay:String,val TextOrientation: String,val FileParseExitCode: Int, val ParsedText: String,val ErrorMessage: String,val ErrorDetails:String
+    data class PR(
+            val TextOverlay:String,
+            val TextOrientation: String,
+            val FileParseExitCode: Int,
+            val ParsedText: String,
+            val ErrorMessage: String? = null,
+            val ErrorDetails:String
     )
 }
 const val apiKey = "140b4b8ee688957"
