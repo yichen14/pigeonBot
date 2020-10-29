@@ -15,19 +15,20 @@ suspend fun main() {
     val config = Yaml(Constructor(Config::class.java)).load(File(configPath).inputStream()) as Config
     val qqId = config.qqID//Bot的QQ号，需为Long类型，在结尾处添加大写L
     val password = config.password//Bot的密码
-    val miraiBot = Bot(qqId, password) { fileBasedDeviceInfo() }.alsoLogin()//新建Bot并登录
-    miraiBot.liveStreamDetect(6979222, "wjqbl")
-    miraiBot.catImage()
-    miraiBot.randomRepeat()
-    miraiBot.welcome()
-    miraiBot.keywordAutoReply()
-    miraiBot.openGame()
-    miraiBot.quote()
-    miraiBot.push()
-    miraiBot.setu()
-    miraiBot.misc()
-    miraiBot.help()
-    miraiBot.smartReply()
+    val pigeonBot = Bot(qqId, password) { fileBasedDeviceInfo() }.alsoLogin()//新建Bot并登录
+    pigeonBot.liveStreamDetect(6979222, "wjqbl")
+    pigeonBot.catImage()
+    pigeonBot.randomRepeat()
+    pigeonBot.welcome()
+    pigeonBot.keywordAutoReply()
+    pigeonBot.openGame()
+    pigeonBot.quote()
+    pigeonBot.push()
+    pigeonBot.setu()
+    pigeonBot.misc()
+    pigeonBot.help()
+    pigeonBot.smartReply()
+    pigeonBot.tokenizerTest()
     //miraiBot.ocr() //测试中，暂不上线
-    miraiBot.join() // 等待 Bot 离线, 避免主线程退出
+    pigeonBot.join() // 等待 Bot 离线, 避免主线程退出
 }

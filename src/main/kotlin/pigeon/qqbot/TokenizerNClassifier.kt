@@ -27,7 +27,7 @@ fun getProps():Properties{
 
 //return 2 dimensional mutable list
 //0th col:word; 1st:PartOfSpeech; 2nd NamedEntityAnnotation
-fun tokenizer(chat: String):MutableList<MutableList<String>> {//input:chat MSG
+fun tokenizer(chat: String, showInfo: Boolean):MutableList<MutableList<String>> {//input:chat MSG
     val annotation = Annotation(chat)
 
     val result: MutableList<MutableList<String>> = ArrayList()
@@ -42,12 +42,13 @@ fun tokenizer(chat: String):MutableList<MutableList<String>> {//input:chat MSG
             val word: String = token.get(CoreAnnotations.TextAnnotation::class.java)
             temp.add(word)
 
-            val pos: String = token.get(CoreAnnotations.PartOfSpeechAnnotation::class.java)
-            temp.add(pos)
+            if(showInfo){
+                val pos: String = token.get(CoreAnnotations.PartOfSpeechAnnotation::class.java)
+                temp.add(pos)
 
-            val ner: String = token.get(CoreAnnotations.NamedEntityTagAnnotation::class.java)
-            temp.add(ner)
-
+                val ner: String = token.get(CoreAnnotations.NamedEntityTagAnnotation::class.java)
+                temp.add(ner)
+            }
             result.add(temp)
         }
     }
