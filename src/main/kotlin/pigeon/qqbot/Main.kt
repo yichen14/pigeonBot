@@ -20,6 +20,7 @@ suspend fun main() {
     miraiBot.catImage()
     miraiBot.randomRepeat()
     miraiBot.welcome()
+    miraiBot.ocr()
     miraiBot.keywordAutoReply()
     miraiBot.openGame()
     miraiBot.quote()
@@ -28,6 +29,6 @@ suspend fun main() {
     miraiBot.misc()
     miraiBot.help()
     miraiBot.smartReply()
-    miraiBot.ocr() //测试中，暂不上线
+    //测试中，暂不上线
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }

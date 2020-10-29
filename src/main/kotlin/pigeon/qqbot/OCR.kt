@@ -5,6 +5,7 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.google.gson.Gson
 import com.google.gson.JsonArray
+import kotlinx.coroutines.delay
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.message.data.Image
@@ -44,8 +45,9 @@ fun Bot.ocr(){
         startsWith("#OCR"){
             if(message[Image] != null) {
                 val img = message[Image]
-                val md5 = saveImg(img?.queryUrl(),"114514")
-                val base64ImageString = encoder("src/img/114514/$md5.jpg")
+                val md5 = saveImg(img?.queryUrl(),"mythquotes")
+                delay(1000L)
+                val base64ImageString = encoder("src/img/mythquotes/$md5.jpg")
                 //reply("check image base64 string: $base64ImageString")
                 val text = fetchJson(base64ImageString)
                 reply(text)
