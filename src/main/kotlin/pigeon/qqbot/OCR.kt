@@ -48,7 +48,6 @@ fun Bot.ocr(){
                 val md5 = saveImg(img?.queryUrl(),"mythquotes")
                 delay(1000L)
                 val base64ImageString = encoder("src/img/mythquotes/$md5.jpg")
-                //reply("check image base64 string: $base64ImageString")
                 val text = fetchJson(base64ImageString)
                 reply(text)
             }
@@ -82,19 +81,4 @@ fun fetchJson(imageBaseString: String):String{
     println(response)
     val result = Klaxon().parse<OCRdata>(response)
     return result!!.ParsedResults[0].ParsedText
-   /* val klaxon  = Klaxon()
-    val parsed = klaxon.parseJsonObject(StringReader(response))
-    val data = parsed.array<Any>("ParsedResults")
-    //return data?.let { klaxon.parseFromJsonArray<PR>() }*/
-/*    val gson = Gson()
-    val json = gson.fromJson<OCRdata>(response,OCRdata::class.java)
-
-    if (json.ParsedResults.ErrorMessage!=null){
-        return json.ParsedResults.ErrorMessage
-    }
-    else{
-        return json.ParsedResults.ParsedText
-    }*/
-    //return response
-
 }
