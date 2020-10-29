@@ -15,25 +15,24 @@ import java.io.StringReader
 import java.util.Base64
 import kotlin.js.*
 import kotlinx.serialization.*
-
 data class OCRdata(
-        val OCRExitCode: Int,
-        val IsErroredOnProcessing: Boolean,
-        val SearchablePDFURL:String,
-        val ParsedResults: PR,
-        val ProcessingTimeInMilliseconds: String
+    val ParsedResults: List<PR>,
+    val OCRExitCode: Int,
+    val IsErroredOnProcessing: Boolean,
+    val SearchablePDFURL:String,
+
+    val ProcessingTimeInMilliseconds: String
 ){
     data class PR(
-            var TextOverlay:String = "",
-            val ParsedText: String,
-            val TextOrientation: String,
-            val FileParseExitCode: Int,
-            val ErrorMessage: String,
-            val ErrorDetails:String
+        //var TextOverlay:String = "",
+        val ParsedText: String,
+        val TextOrientation: String,
+        val FileParseExitCode: Int,
+        val ErrorMessage: String,
+        val ErrorDetails:String
     )
 
 }
-
 
 
 const val apiKey = "140b4b8ee688957"
@@ -66,13 +65,13 @@ fun encoder(filePath: String): String{
 fun fetchJson(imageBaseString: String):String{
     val postBody = FormBody.Builder()
         .add("apikey", apiKey)
-            .add("base64Image","data:image/jpg;base64,$imageBaseString")
-            .add("language",lang)
+        .add("base64Image","data:image/jpg;base64,$imageBaseString")
+        .add("language",lang)
         .build()
 
     val request = Request.Builder()
         .url(url)
-            .post(postBody)
+        .post(postBody)
         .build()
 
     val client = OkHttpClient()
@@ -80,7 +79,7 @@ fun fetchJson(imageBaseString: String):String{
 
     println(response)
     val result = Klaxon().parse<OCRdata>(response)
-    return result!!.ParsedResults.ParsedText
+    return result!!.ParsedResults[0].ParsedText
    /* val klaxon  = Klaxon()
     val parsed = klaxon.parseJsonObject(StringReader(response))
     val data = parsed.array<Any>("ParsedResults")
