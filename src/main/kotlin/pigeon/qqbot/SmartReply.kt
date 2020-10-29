@@ -12,9 +12,9 @@ import kotlin.random.Random
 fun Bot.smartReply() {
     var smartReplyPossibility = 100.0
     this.subscribeAlways<GroupMessageEvent> {
-        if (message.content.contains("我") && !message.content.startsWith("#"))
+        if ((message.content.contains("我") || message.content.contains("你")) && !message.content.startsWith("#"))
             if (Random.nextDouble(1.0, 100.0) <= smartReplyPossibility) {
-                reply(message.toString().replace("我", "你"))
+                reply(message.content.replace("我", "肏").replace("你","我").replace("肏","你"))
             }
     }
     this.subscribeMessages {
