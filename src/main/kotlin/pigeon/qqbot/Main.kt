@@ -21,6 +21,7 @@ suspend fun main() {
     miraiBot.randomRepeat()
     miraiBot.welcome()
     miraiBot.keywordAutoReply()
+    miraiBot.roll()
     miraiBot.openGame()
     miraiBot.quote()
     miraiBot.push()
