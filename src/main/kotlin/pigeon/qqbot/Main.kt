@@ -22,12 +22,12 @@ suspend fun main() {
     miraiBot.welcome()
     miraiBot.quote()
     miraiBot.keywordAutoReply()
+    miraiBot.roll()
     miraiBot.openGame()
     miraiBot.push()
     miraiBot.setu()
     miraiBot.misc()
     miraiBot.help()
     miraiBot.smartReply()
-    //测试中，暂不上线
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
 }
