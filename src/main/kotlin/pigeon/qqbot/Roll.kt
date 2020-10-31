@@ -13,7 +13,7 @@ fun Bot.roll(){
             for (i in 1..times){
                 output += nextInt(1, dice)
             }
-            reply(output as String)
+            reply(output.toString())
         }
     }
 }
