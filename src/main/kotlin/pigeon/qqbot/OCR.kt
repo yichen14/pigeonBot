@@ -16,6 +16,7 @@ import java.io.StringReader
 import java.util.Base64
 import kotlin.js.*
 import kotlinx.serialization.*
+
 data class OCRdata(
     val ParsedResults: List<PR>,
     val OCRExitCode: Int,
@@ -34,7 +35,6 @@ data class OCRdata(
     )
 
 }
-
 
 const val apiKey = "140b4b8ee688957"
 const val url = "https://api.ocr.space/parse/image"
@@ -57,12 +57,30 @@ fun Bot.ocr(){
         }
     }
 }
+
+/**
+ * return OCR result for a given image.
+ */
+fun ocr(img: File): String{
+    val base64ImageString = encoder(img)
+    return fetchJson(base64ImageString)
+}
+
 fun encoder(filePath: String): String{
     val bytes = File(filePath).readBytes()
     val base64 = Base64.getEncoder().encodeToString(bytes)
     return base64
 }
 
+fun encoder(file: File): String{
+    val bytes = file.readBytes()
+    val base64 = Base64.getEncoder().encodeToString(bytes)
+    return base64
+}
+
+/**
+ * return parsed OCR result of a given image encoded by base64
+ */
 fun fetchJson(imageBaseString: String):String{
     val postBody = FormBody.Builder()
         .add("apikey", apiKey)
@@ -77,8 +95,6 @@ fun fetchJson(imageBaseString: String):String{
 
     val client = OkHttpClient()
     val response = client.newCall(request).execute().body()!!.string()
-
-    println(response)
     val result = Klaxon().parse<OCRdata>(response)
     return result!!.ParsedResults[0].ParsedText
 }

@@ -8,8 +8,13 @@ import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.message.data.queryUrl
 import net.mamoe.mirai.message.sendAsImageTo
 import java.io.File
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
-var QuoteList = mutableListOf<QuoteClass>()
+val json = File("QuoteConfig.json").readText()
+val type = object : TypeToken<MutableList<QuoteClass>>(){}.type
+val QuoteList = Gson().fromJson<MutableList<QuoteClass>>(json,type)
+
 fun Bot.quote() {
     this.subscribeMessages {
         startsWith("#上传语录") {
@@ -19,6 +24,7 @@ fun Bot.quote() {
                 val md5 = saveImg(img?.queryUrl(), "${at?.target}quotes")
                 val q = QuoteClass(md5,at!!.target)
                 QuoteList.add(q)
+                File("QuoteConfig.json").writeText(Gson().toJson(QuoteList))
                 reply("添加成功")
             }else{
                 reply("添加失败 缺少图片或用户信息")
@@ -33,10 +39,10 @@ fun Bot.quote() {
             //val ImageList = mutableListOf<QuoteClass>()
             for(quote in QuoteList){
 
-               if(quote.getContent().contains(keyWord, ignoreCase = true)){
+               if(quote.content.contains(keyWord, ignoreCase = true)){
                     //ImageList.add(quote)
-                    val path = "${quote.getMemberQQ()}quotes"
-                    val md5 = quote.getMd5()
+                    val path = "${quote.memberQQ}quotes"
+                    val md5 = quote.md5
                     reply(quote.printInfo())
                     //File("src/img/$path/$$md5.jpg").sendAsImageTo(subject)
                 }

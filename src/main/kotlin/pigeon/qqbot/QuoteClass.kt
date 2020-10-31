@@ -1,14 +1,20 @@
 package pigeon.qqbot
 
-import net.mamoe.mirai.Bot
-import net.mamoe.mirai.event.subscribeAlways
-import net.mamoe.mirai.event.subscribeMessages
-import net.mamoe.mirai.message.GroupMessageEvent
-import net.mamoe.mirai.message.data.Image
-import net.mamoe.mirai.message.data.content
-import net.mamoe.mirai.message.data.queryUrl
-import net.mamoe.mirai.message.sendAsImageTo
+import java.io.File
 
+
+data class QuoteClass(var md5: String,
+                      var memberQQ: Long,
+                      var content: String = ocr(File("src/img/${memberQQ}quotes/${md5}.jpg"))){
+
+    fun printInfo():String{
+        val info = "Quote Object Info: memberQQ["+this.memberQQ+"]; md5["+this.md5+"]; content["+this.content+"]"
+        return info
+    }
+}
+
+
+/*
 class QuoteClass {
     private var content = "";
     private var md5 = "";
@@ -17,7 +23,7 @@ class QuoteClass {
     constructor(md5: String, memberQQ: Long){
         this.md5 = md5;
         this.memberQQ = memberQQ;
-        setContent();
+        this.content = ocr(File("src/img/${memberQQ}quotes/${md5}.jpg"))
     }
     fun getContent():String{
         return this.content;
@@ -33,11 +39,12 @@ class QuoteClass {
         val info = "Quote Object Info: memberQQ["+this.memberQQ+"]; md5["+this.md5+"]; content["+this.content+"]"
         return info
     }
-    /*
+    /**
     * Using OCR to recognize word content
-    * */
+    */
+    /*
     private fun setContent(){
-        this.content = "test"//没写OCR，可以先测试一下list结构和搜索功能
+        this.content = ocr(File("src/img/${memberQQ}quotes/${md5}.jpg"))
     }
-
-}
+     */
+}*/
