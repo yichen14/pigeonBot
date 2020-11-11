@@ -51,7 +51,7 @@ fun Bot.setu() {
                             val md5 = saveImg(url?.replace("pximg.net", "pixiv.cat"), "setu")
                             File("src/img/setu/$md5.jpg").sendAsImageTo(subject)
                         } catch (e: Exception) {
-                            reply("找不到关键词为${xp}的色图")
+                            reply("找不到关键词为${it.replace("pixivic","")}的色图")
                         }
                     }
                     429 -> reply("今日色图配额已用尽，你们真能冲啊")
