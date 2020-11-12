@@ -8,6 +8,9 @@ import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.messageChainOf
 import net.mamoe.mirai.message.sendAsImageTo
+import okhttp3.Headers
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
@@ -43,12 +46,26 @@ fun Bot.setu() {
                     }
                     404 -> {
                         xp = xp.replace("pixivic", "").trim()
-                        try {
+                        try {/*
                             val url =
                                 getJson<PixivIcRpl>("https://api.pixivic.com/illustrations?keyword=$xp&page=1&illustType=illust")?.data?.get(
                                     (0..5).random()
-                                )?.imageUrls?.random()?.original
-                            val md5 = saveImg(url?.replace("pximg.net", "pixiv.cat"), "setu")
+                                )?.imageUrls?.random()?.original*/
+                            val simpleUrl = "https://api.pixivic.com/illustrations?keyword=$xp&page=1&illustType=illust"
+                            val authorization = "eyJhbGciOiJIUzUxMiJ9.eyJwZXJtaXNzaW9uTGV2ZWwiOjIsInJlZnJlc2hDb3VudCI6MSwiaXNCYW4iOjEsInVzZXJJZCI6NTYwMDA4LCJpYXQiOjE2MDUxOTU1NjYsImV4cCI6MTYwNTM2ODM2Nn0.86cYaJsgv_UHh0U5tfQR9D6wzwv6QXZNZGrPlyc61tjHH0EK4fzmrKk73dBDvTiQ_z4T7j6dFWXEfbtntdzayQ"
+                            val headers = Headers.Builder()
+                                .add("Authorization", authorization)
+                                .build()
+                            val request = Request.Builder()
+                                .url(simpleUrl)
+                                .headers(headers)
+                                .get()
+                                .build()
+                            val client = OkHttpClient()
+                            val response = client.newCall(request).execute().body()!!.string()
+                            println(response)
+                            val result = Klaxon().parse<PixivIcRpl>(response)?.data?.get((0..5).random())?.imageUrls?.random()?.original
+                            val md5 = saveImg(result?.replace("pximg.net", "pixiv.cat"), "setu")
                             File("src/img/setu/$md5.jpg").sendAsImageTo(subject)
                         } catch (e: Exception) {
                             reply("找不到关键词为${xp}的色图")
