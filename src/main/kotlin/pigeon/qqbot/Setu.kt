@@ -46,11 +46,7 @@ fun Bot.setu() {
                     }
                     404 -> {
                         xp = xp.replace("pixivic", "").trim()
-                        try {/*
-                            val url =
-                                getJson<PixivIcRpl>("https://api.pixivic.com/illustrations?keyword=$xp&page=1&illustType=illust")?.data?.get(
-                                    (0..5).random()
-                                )?.imageUrls?.random()?.original*/
+                        try {
                             val simpleUrl = "https://api.pixivic.com/illustrations?keyword=$xp&page=1&illustType=illust"
                             val authorization = "eyJhbGciOiJIUzUxMiJ9.eyJwZXJtaXNzaW9uTGV2ZWwiOjIsInJlZnJlc2hDb3VudCI6MSwiaXNCYW4iOjEsInVzZXJJZCI6NTYwMDA4LCJpYXQiOjE2MDUxOTU1NjYsImV4cCI6MTYwNTM2ODM2Nn0.86cYaJsgv_UHh0U5tfQR9D6wzwv6QXZNZGrPlyc61tjHH0EK4fzmrKk73dBDvTiQ_z4T7j6dFWXEfbtntdzayQ"
                             val headers = Headers.Builder()
@@ -63,7 +59,6 @@ fun Bot.setu() {
                                 .build()
                             val client = OkHttpClient()
                             val response = client.newCall(request).execute().body()!!.string()
-                            println(response)
                             val result = Klaxon().parse<PixivIcRpl>(response)?.data?.get((0..5).random())?.imageUrls?.random()?.original
                             val md5 = saveImg(result?.replace("pximg.net", "pixiv.cat"), "setu")
                             File("src/img/setu/$md5.jpg").sendAsImageTo(subject)

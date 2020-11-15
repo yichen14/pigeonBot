@@ -36,21 +36,16 @@ fun Bot.quote() {
         }
         startsWith("#搜索语录"){
             val keyWord = it.split(" ")[0]
-            //val ImageList = mutableListOf<QuoteClass>()
+            val ImageList = mutableListOf<QuoteClass>()
             for(quote in QuoteList){
-
-               if(quote.content.contains(keyWord, ignoreCase = true)){
-                    //ImageList.add(quote)
-                    val path = "${quote.memberQQ}quotes"
-                    val md5 = quote.md5
-                    reply(quote.printInfo())
-                    //File("src/img/$path/$$md5.jpg").sendAsImageTo(subject)
+                if(quote.content.contains(keyWord, ignoreCase = true)){
+                    ImageList.add(quote)
                 }
             }
-/*            val img = ImageList.random();
-            val path = "${img.getMemberQQ()}quotes"
-            val md5 = img.getMd5()
-            File("src/img/$path/$$md5.jpg").sendAsImageTo(subject)*/
+            val img = ImageList.random();
+            val path = "${img.memberQQ}quotes"
+            val md5 = img.md5
+            File("src/img/$path/$md5.jpg").sendAsImageTo(subject)
         }
     }
 }

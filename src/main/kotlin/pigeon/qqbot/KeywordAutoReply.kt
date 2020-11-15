@@ -97,8 +97,8 @@ fun Bot.keywordAutoReply() {
 }
 
 
-/*
-下载图片 并保存为$<md5>.jpg
+/**
+下载图片 并保存为$md5.jpg
  */
 fun saveImg(imageUrl: String?, path: String): String {
     val img = File("src/img/$path/temp.jpg")
