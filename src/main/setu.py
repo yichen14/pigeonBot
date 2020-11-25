@@ -1,7 +1,7 @@
+import sys
+print(sys.path)
 from pixivpy3 import *
 import random
-import sys
-sys.path.append("/usr/local/lib/python2.7/dist-packages")
 
 def login(username, password):
     aapi = AppPixivAPI()
