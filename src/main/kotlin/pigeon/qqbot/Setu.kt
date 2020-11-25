@@ -24,7 +24,7 @@ private val lastTime = mutableMapOf<Long, Long>()
 fun Bot.setu(username: String, password: String) {
     val interp = PythonInterpreter()
     interp.exec("import sys")
-    interp.exec("sys.path.append('usr/local/lib/python2.7/dist-packages')")
+    interp.exec("sys.path.append('/usr/local/lib/python2.7/dist-packages')")
     interp.execfile("src/main/setu.py")
     val api = interp.get("login", PyFunction::class.java).__call__(PyString(username), PyString(password))
     val search = interp.get("search", PyFunction::class.java)
