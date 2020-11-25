@@ -2,7 +2,7 @@ from pixivpy3 import *
 import random
 
 def login(username, password):
-    aapi = AppPixivAPI(**_REQUESTS_KWARGS)
+    aapi = AppPixivAPI()
     aapi.login(username,password)
     return aapi
 
