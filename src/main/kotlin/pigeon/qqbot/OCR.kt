@@ -1,10 +1,6 @@
 package pigeon.qqbot
 
-import com.beust.klaxon.Json
-import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
-import com.google.gson.Gson
-import com.google.gson.JsonArray
 import kotlinx.coroutines.delay
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.event.subscribeMessages
@@ -12,10 +8,7 @@ import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.queryUrl
 import okhttp3.*
 import java.io.File
-import java.io.StringReader
 import java.util.Base64
-import kotlin.js.*
-import kotlinx.serialization.*
 
 data class OCRdata(
     val ParsedResults: List<PR>,
