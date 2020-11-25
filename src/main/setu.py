@@ -1,3 +1,5 @@
+import sys
+print(sys.path)
 from pixivpy3 import *
 import random
 
