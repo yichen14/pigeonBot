@@ -45,7 +45,7 @@ fun Bot.setu(username: String, password: String) {
                     404 -> {
                         xp = it.replace("pixiv", "").trim()
                         try {
-                            val proc = Runtime.getRuntime().exec("python3 src/main/setusearch.py $xp")
+                            val proc=Runtime.getRuntime().exec("python3 src/main/setusearch.py $xp")
                             val md5 = saveImg(BufferedReader(InputStreamReader(proc.inputStream)).readLine(), "setu")
                             File("src/img/setu/$md5.jpg").sendAsImageTo(subject)
                             lastTime[this.sender.id] = System.currentTimeMillis()
