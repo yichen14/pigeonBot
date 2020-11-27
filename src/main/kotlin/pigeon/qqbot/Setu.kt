@@ -23,7 +23,7 @@ data class LoliconRpl(val code: Int, val data: List<LoliconImg>)
 private val lastTime = mutableMapOf<Long, Long>()
 
 fun Bot.setu(username: String, password: String) {
-    GlobalScope.launch { Runtime.getRuntime().exec("python src/main/setuserver.py $username $password") }
+    GlobalScope.launch { Runtime.getRuntime().exec("python3 src/main/setuserver.py $username $password") }
     this.subscribeMessages {
         startsWith("#色图", true) {
             if (lastTime.containsKey(this.sender.id) && System.currentTimeMillis() - lastTime[this.sender.id]!! <= 1000 * 60 * 3) {
@@ -45,7 +45,7 @@ fun Bot.setu(username: String, password: String) {
                     404 -> {
                         xp = it.replace("pixiv", "").trim()
                         try {
-                            val proc=Runtime.getRuntime().exec("python src/main/setusearch.py $xp")
+                            val proc=Runtime.getRuntime().exec("python3 src/main/setusearch.py $xp")
                             val md5 = saveImg(BufferedReader(InputStreamReader(proc.inputStream)).readLine(), "setu")
                             File("src/img/setu/$md5.jpg").sendAsImageTo(subject)
                             lastTime[this.sender.id] = System.currentTimeMillis()
