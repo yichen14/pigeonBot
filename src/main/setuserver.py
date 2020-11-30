@@ -21,6 +21,6 @@ class SetuService(rpyc.Service):
     def exposed_search(self,keyword):
          self._illusts=self._api.search_works(keyword,types=["illustration"],per_page=1000).response
          self._illusts.sort(key=lambda illust:-illust.stats.views_count)
-         return self._illusts[0].image_urls.large.replace("i.pximg.net","i.pixiv.cat")
+         return self._illusts[random.randint(0,5)].image_urls.large.replace("i.pximg.net","i.pixiv.cat")
 
 rpyc.utils.server.ThreadedServer(SetuService(sys.argv[1],sys.argv[2]),port=11451).start()
