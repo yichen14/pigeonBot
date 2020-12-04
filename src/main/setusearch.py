@@ -1,3 +1,3 @@
 import rpyc
 import sys
-print(rpyc.connect("localhost",11451).root.search(sys.argv[1]))
+print(rpyc.connect("localhost",11451).root.search(sys.argv[1],sys.argv[2]))
