@@ -20,7 +20,7 @@ fun Bot.setu(username: String, password: String) {
     GlobalScope.launch { Runtime.getRuntime().exec("python3 src/main/setuserver.py $username $password") }
     this.subscribeMessages {
         startsWith("#色图", true) {
-            val xp = URLEncoder.encode(it, "UTF-8")
+            var xp = URLEncoder.encode(it, "UTF-8")
             val json =
                 getJson<LoliconRpl>("https://api.lolicon.app/setu/?apikey=432105395f48f8888acb81&keyword=$xp")
             when (json?.code) {
@@ -36,11 +36,12 @@ fun Bot.setu(username: String, password: String) {
                     val xps = it.replace("pixiv", "").trim().split(" ")
                     try {
                         val mode = if (xps.size > 1) xps[0] else "text"
-                        val proc = Runtime.getRuntime().exec("python3 src/main/setusearch.py ${xps[1]} $mode")
+                        xp = if (xps.size > 1) xps[1] else xps[0]
+                        val proc = Runtime.getRuntime().exec("python3 src/main/setusearch.py $xp $mode")
                         val md5 = saveImg(BufferedReader(InputStreamReader(proc.inputStream)).readLine(), "setu")
                         File("src/img/setu/$md5.jpg").sendAsImageTo(subject)
                     } catch (e: Exception) {
-                        reply("找不到关键词为${xps[1]}的色图")
+                        reply("找不到关键词为${xp}的色图")
                     }
                 }
                 429 -> reply("今日色图配额已用尽，你们真能冲啊")
