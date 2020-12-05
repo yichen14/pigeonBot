@@ -1,9 +1,12 @@
 package pigeon.qqbot
 
+import com.beust.klaxon.Klaxon
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.mamoe.mirai.Bot
+import java.net.HttpURLConnection
+import java.net.URL
 
 data class Douyu(val error: Int, val data: Data)
 data class Data(val room_name: String, val room_status: String, val start_time: String)
@@ -22,4 +25,10 @@ fun Bot.liveStreamDetect(roomNumber: Int,message:String) {
             delay(100000L)//100s
         }
     }
+}
+
+inline fun <reified json> getJson(url: String): json? {
+    val http = URL(url).openConnection() as HttpURLConnection
+    http.requestMethod = "GET"
+    return Klaxon().parse<json>(http.inputStream)
 }
