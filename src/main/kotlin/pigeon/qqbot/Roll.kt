@@ -11,7 +11,7 @@ fun Bot.roll() {
             val dice = it.split("d", ignoreCase = true, limit = 0)[1].toInt() + 1
             var output = 0
             for (i in 1..times) {
-                output += nextInt(1, dice + 1)
+                output += nextInt(1, dice)
             }
             reply(output.toString())
         }
