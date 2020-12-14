@@ -16,20 +16,15 @@ fun Bot.setu(username: String, password: String) {
     this.subscribeMessages {
         startsWith("#色图", true) {
             val xps = it.trim().split(" ")
-            val mode = if (xps.size > 1) xps[0] else "text"
-            val xp = it.replaceFirst(mode, "").trim()
-            if (mode in legalMode) {
-                try {
-                    val proc = Runtime.getRuntime().exec("python3 src/main/setusearch.py $xp $mode")
-                    val url = BufferedReader(InputStreamReader(proc.inputStream)).readLine()
-                    print(url)
-                    val md5 = saveImg(url, "setu")
-                    File("src/img/setu/$md5.jpg").sendAsImageTo(subject)
-                } catch (e: Exception) {
-                    reply("找不到关键词为${xp}的色图")
-                }
-            } else {
-                reply("搜索模式不合法")
+            val mode = if (xps.size > 1 && xps[0] in legalMode) xps[0] else "text"
+            val xp = if (mode in legalMode) it.replaceFirst(mode, "").trim() else it.trim()
+            try {
+                val proc = Runtime.getRuntime().exec("python3 src/main/setusearch.py $xp $mode")
+                val url = BufferedReader(InputStreamReader(proc.inputStream)).readLine()
+                val md5 = saveImg(url, "setu")
+                File("src/img/setu/$md5.jpg").sendAsImageTo(subject)
+            } catch (e: Exception) {
+                reply("找不到关键词为${xp}的色图")
             }
         }
     }
