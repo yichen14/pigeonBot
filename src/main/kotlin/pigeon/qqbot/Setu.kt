@@ -16,8 +16,8 @@ fun Bot.setu(username: String, password: String) {
     this.subscribeMessages {
         startsWith("#色图", true) {
             val xps = it.trim().split(" ")
-            val mode = if (xps.size > 1 && xps[0] in legalMode) xps[0] else "text"
-            val xp = if (mode in legalMode) it.replaceFirst(mode, "").trim() else it.trim()
+            val mode = if (xps.size > 1 && xps[0] in legalMode) xps[0] else "tag"
+            val xp = it.replaceFirst(mode, "").trim()
             try {
                 val proc = Runtime.getRuntime().exec("python3 src/main/setusearch.py $xp $mode")
                 val url = BufferedReader(InputStreamReader(proc.inputStream)).readLine()
