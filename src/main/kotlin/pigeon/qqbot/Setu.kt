@@ -1,7 +1,6 @@
 package pigeon.qqbot
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import jdk.internal.misc.Signal
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.message.sendAsImageTo
@@ -12,13 +11,14 @@ import java.io.InputStreamReader
 val legalMode = listOf("text", "tag", "exact_tag", "caption")
 
 fun Bot.setu(username: String, password: String) {
-    GlobalScope.launch { Runtime.getRuntime().exec("python3 src/main/setuserver.py $username $password") }
+    val serv = Runtime.getRuntime().exec("python3 src/main/setuserver.py $username $password")
+    Signal.handle(Signal("INT")) { serv.destroy() }
     this.subscribeMessages {
         startsWith("#色图", true) {
             val xps = it.trim().split(" ")
             val mode = if (xps.size > 1 && xps[0] in legalMode) xps[0] else "tag"
             var xp = it.replaceFirst(mode, "").trim()
-            if (xp == ""){
+            if (xp == "") {
                 xp = "色图"
             }
             try {
@@ -31,4 +31,9 @@ fun Bot.setu(username: String, password: String) {
             }
         }
     }
+}
+
+fun main() {
+    Runtime.getRuntime().exec("python3 src/main/setuserver.py aotuman233@gmail.com fizvud-dusVa4-zujxyz")
+    print("haha")
 }
