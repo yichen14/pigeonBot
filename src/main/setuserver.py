@@ -28,7 +28,7 @@ class SetuService(rpyc.Service):
         #self._illusts=self._api.search_works(keyword,types=["illustration"],per_page=1000,mode=mode).response
         #self._illusts.sort(key=lambda illust:-illust.stats.views_count)
         #return self._illusts[random.randint(0,5)].image_urls.large.replace("i.pximg.net","i.pixiv.cat")
-        self._illusts=self._api.search_works(keyword,types=["illustration"],per_page=10,mode=mode,sort="popular").response
+        self._illusts=self._api.search_works(keyword,types=["illustration"],per_page=500,mode=mode,sort="popular").response
         fglFile = open('src/main/resources/fgl.txt', 'r')
         for i in self._illusts:
             if str(i.id) not in self._fgl:
@@ -38,7 +38,6 @@ class SetuService(rpyc.Service):
                 f.write(str(i.id) + '\n')
                 f.close()
                 return i.image_urls.large.replace("i.pximg.net","i.pixiv.cat")
-
                 break
 
 
