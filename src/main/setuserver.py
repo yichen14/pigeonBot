@@ -17,7 +17,10 @@ class SetuService(rpyc.Service):
         self._username=username
         self._password=password
         _fglfile= open('src/main/resources/fgl.txt','r')
-        self._fgl = _fglfile.readlines()
+        self._fgl = []
+        for line in _fglfile.readlines():
+            line.strip()
+            self._fgl.append(line)
         _fglfile.close()
         self._api=PixivAPI(**_REQUESTS_KWARGS)
         self._api.login(self._username,self._password)
