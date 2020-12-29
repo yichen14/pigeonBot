@@ -1,6 +1,5 @@
 package pigeon.qqbot
 
-import jdk.internal.misc.Signal
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.join
@@ -37,5 +36,8 @@ suspend fun main() {
     miraiBot.help()
     miraiBot.smartReply()
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
-    Signal.handle(Signal("TERM")) { serv.destroy() }
+    //Signal.handle(Signal("TERM")) { serv.destroy() }
+    Runtime.getRuntime().addShutdownHook(Thread(){
+        serv.destroy()
+    })
 }
