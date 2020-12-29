@@ -27,7 +27,7 @@ class SetuService(rpyc.Service):
         _illusts=self._api.search_works(keyword,types=["illustration"],per_page=500,mode=mode,sort="popular").response
         for i in _illusts:
             if str(i.id) not in self._fgl:
-                f = open('/src/main/resources/fgl.txt', 'a')
+                f = open('src/main/resources/fgl.txt', 'a')
                 self._fgl.append(str(i.id))
                 f.write(str(i.id) + '\n')
                 f.close()
