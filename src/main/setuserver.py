@@ -19,8 +19,7 @@ class SetuService(rpyc.Service):
         _fglfile= open('src/main/resources/fgl.txt','r')
         self._fgl = []
         for line in _fglfile.readlines():
-            line.strip()
-            self._fgl.append(line)
+            self._fgl.append(line.strip())
         _fglfile.close()
         self._api=PixivAPI(**_REQUESTS_KWARGS)
         self._api.login(self._username,self._password)
@@ -28,13 +27,12 @@ class SetuService(rpyc.Service):
         _illusts=self._api.search_works(keyword,types=["illustration"],per_page=500,mode=mode,sort="popular").response
         for i in _illusts:
             if str(i.id) not in self._fgl:
-                f = open('src/main/resources/fgl.txt', 'a')
+                f = open('/src/main/resources/fgl.txt', 'a')
                 self._fgl.append(str(i.id))
                 f.write(str(i.id) + '\n')
                 f.close()
                 return i.image_urls.large.replace("i.pximg.net","i.pixiv.cat")
                 break
-        return ""
 
 
 rpyc.utils.server.ThreadedServer(SetuService(sys.argv[1],sys.argv[2]),port=11451).start()
