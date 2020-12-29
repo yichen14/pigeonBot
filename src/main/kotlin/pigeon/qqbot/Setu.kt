@@ -9,8 +9,7 @@ import java.io.InputStreamReader
 
 val legalMode = listOf("text", "tag", "exact_tag", "caption")
 
-fun Bot.setu(username: String, password: String) {
-    val serv = Runtime.getRuntime().exec("python3 src/main/setuserver.py $username $password")
+fun Bot.setu() {
     //Signal.handle(Signal("INT")) { serv.destroy() }
     this.subscribeMessages {
         startsWith("#色图", true) {
@@ -32,7 +31,3 @@ fun Bot.setu(username: String, password: String) {
     }
 }
 
-fun main() {
-    Runtime.getRuntime().exec("python3 src/main/setuserver.py aotuman233@gmail.com fizvud-dusVa4-zujxyz")
-    print("haha")
-}
