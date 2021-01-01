@@ -21,7 +21,7 @@ suspend fun main() {
     val qqId = config.qqID//Bot的QQ号，需为Long类型，在结尾处添加大写L
     val password = config.qqPassword//Bot的密码
     val miraiBot = Bot(qqId, password) { fileBasedDeviceInfo() }.alsoLogin()//新建Bot并登录
-    val serv = Runtime.getRuntime().exec("python3 src/main/setuserver.py ${config.pixivUsername} ${config.pixivPassword}")
+    val serv = Runtime.getRuntime().exec("python3 src/main/setuserver.py ${config.pixivUsername} ${config.pixivPassword} > setu.log")
     miraiBot.liveStreamDetect(6979222, "wjqbl")
     miraiBot.catImage()
     miraiBot.randomRepeat()
@@ -37,7 +37,7 @@ suspend fun main() {
     miraiBot.smartReply()
     miraiBot.join() // 等待 Bot 离线, 避免主线程退出
     //Signal.handle(Signal("TERM")) { serv.destroy() }
-    Runtime.getRuntime().addShutdownHook(Thread(){
+    Runtime.getRuntime().addShutdownHook(Thread {
         serv.destroy()
     })
 }

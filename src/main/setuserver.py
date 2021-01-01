@@ -5,10 +5,10 @@ import sys
 import json
 
 _REQUESTS_KWARGS = {
-     #'proxies': {
-     #    'https': 'http://127.0.0.1:1080',
-     #},
-     #'verify': True,
+     'proxies': {
+         'https': 'http://127.0.0.1:1080',
+     },
+     'verify': True,
 }
 
 class SetuService(rpyc.Service):
@@ -24,7 +24,9 @@ class SetuService(rpyc.Service):
         self._api=PixivAPI(**_REQUESTS_KWARGS)
         self._api.login(self._username,self._password)
     def exposed_search(self,keyword,mode):
-        _illusts=self._api.search_works(keyword,types=["illustration"],per_page=500,mode=mode,sort="popular").response
+        _res=self._api.search_works(keyword,types=["illustration"],per_page=500,mode=mode,sort="popular")
+        _illusts=_res.response
+        print(_res)
         for i in _illusts:
             if str(i.id) not in self._fgl:
                 f = open('src/main/resources/fgl.txt', 'a')
