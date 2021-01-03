@@ -29,7 +29,6 @@ class SetuService():
                 self._fgl.append(str(i.id))
                 f.write(str(i.id) + '\n')
                 f.close()
-                return i.image_urls.large.replace("i.pximg.net","i.pixiv.cat")
+                return i.image_urls.large.replace("i.pximg.net","i.pixiv.cat")+" "+str(i.id)
 
-#print(rpyc.connect("localhost",11451).root.search(sys.argv[1],sys.argv[2]))
 print(SetuService(sys.argv[1],sys.argv[2]).search(sys.argv[3],sys.argv[4]))
