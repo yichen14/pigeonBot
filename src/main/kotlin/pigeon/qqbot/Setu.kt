@@ -9,7 +9,7 @@ import java.io.InputStreamReader
 
 val legalMode = listOf("text", "tag", "exact_tag", "caption")
 
-fun Bot.setu() {
+fun Bot.setu(username:String, password:String) {
     //Signal.handle(Signal("INT")) { serv.destroy() }
     this.subscribeMessages {
         startsWith("#色图", true) {
@@ -20,7 +20,7 @@ fun Bot.setu() {
                 xp = "色图"
             }
             try {
-                val proc = Runtime.getRuntime().exec("python3 src/main/setusearch.py $xp $mode")
+                val proc = Runtime.getRuntime().exec("python3 src/main/setusearch.py $username $password $xp $mode")
                 val url = BufferedReader(InputStreamReader(proc.inputStream)).readLine()
                 val md5 = saveImg(url, "setu")
                 File("src/img/setu/$md5.jpg").sendAsImageTo(subject)
