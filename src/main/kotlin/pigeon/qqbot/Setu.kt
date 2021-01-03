@@ -2,11 +2,8 @@ package pigeon.qqbot
 
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.event.subscribeMessages
-import net.mamoe.mirai.message.quote
-import net.mamoe.mirai.message.quoteReply
-import net.mamoe.mirai.message.sendAsImageTo
+import net.mamoe.mirai.message.data.sendTo
 import java.io.BufferedReader
-import java.io.File
 import java.io.InputStreamReader
 import java.net.URL
 
@@ -25,10 +22,9 @@ fun Bot.setu(username:String, password:String) {
             try {
                 val proc = Runtime.getRuntime().exec("python3 src/main/setusearch.py $username $password $xp $mode")
                 val urlAndId = BufferedReader(InputStreamReader(proc.inputStream)).readLine().split(" ")
-                val url = urlAndId[0] as URL
+                val url = URL(urlAndId[0])
                 val id = urlAndId[1]
-                //val md5 = saveImg(url, "setu")
-                url.openConnection().getInputStream().sendAsImageTo(subject).quoteReply(id)
+                url.openConnection().getInputStream().uploadAsImage().plus(id).sendTo(subject)//sendAsImageTo(subject).quoteReply(id)
             } catch (e: Exception) {
                 reply("找不到关键词为${xp}的色图")
             }
