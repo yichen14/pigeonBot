@@ -26,6 +26,7 @@ fun Bot.setu(username:String, password:String) {
                 val id = urlAndId[1]
                 url.openConnection().getInputStream().uploadAsImage().plus(id).sendTo(subject)//sendAsImageTo(subject).quoteReply(id)
             } catch (e: Exception) {
+                reply(e.toString())
                 reply("找不到关键词为${xp}的色图")
             }
         }
