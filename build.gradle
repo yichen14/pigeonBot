@@ -4,7 +4,7 @@ plugins {
 }
 apply plugin: 'java'
 apply plugin: 'application'
-applicationDefaultJvmArgs = ["-Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=8118 -Dhttp.nonProxyHosts=\"localhost|127.0.0.1\""]
+applicationDefaultJvmArgs = ["-Dhttp.proxyHost=127.0.0.1", "-Dhttp.proxyPort=8118", "-Dhttp.nonProxyHosts=\"localhost|127.0.0.1\""]
 apply plugin: 'java-library'
 group 'org.example'
 version '1.0-SNAPSHOT'
