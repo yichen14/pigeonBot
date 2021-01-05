@@ -19,7 +19,7 @@ fun Bot.setu(username:String, password:String) {
                 xp = "色图"
             }
             try {
-                val proc = Runtime.getRuntime().exec("python3 src/main/setusearch.py $username $password $xp $mode")
+                val proc = Runtime.getRuntime().exec("python3.9 src/main/setusearch.py $username $password $xp $mode")
                 val urlAndId = BufferedReader(InputStreamReader(proc.inputStream)).readLine().split(" ")
                 val url = URL(urlAndId[0])
                 val id = urlAndId[1]
