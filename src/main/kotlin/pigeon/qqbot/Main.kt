@@ -17,6 +17,8 @@ data class Config(
 const val configPath = "src/main/resources/config.yml"
 
 suspend fun main() {
+    System.setProperty("http.proxyHost", "127.0.0.1")
+    System.setProperty("http.proxyPort","8118")
     val config = Yaml(Constructor(Config::class.java)).load(File(configPath).inputStream()) as Config
     val qqId = config.qqID//Bot的QQ号，需为Long类型，在结尾处添加大写L
     val password = config.qqPassword//Bot的密码

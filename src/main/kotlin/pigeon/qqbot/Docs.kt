@@ -16,7 +16,6 @@ import net.mamoe.mirai.event.subscribeMessages
 import java.io.File
 import java.io.InputStreamReader
 import java.util.*
-import java.lang.System
 
 private const val appName = "pigeonbot"
 private val jsonFactory: JacksonFactory = JacksonFactory.getDefaultInstance()
@@ -58,8 +57,6 @@ fun getPushList(): List<Pair<String, String>> {
 }
 
 fun Bot.push() {
-    System.setProperty("http.proxyHost", "127.0.0.1")
-    System.setProperty("http.proxyPort","8118")
     this.subscribeMessages {
         case("#催更") {
             val pushList = getPushList()

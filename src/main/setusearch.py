@@ -2,10 +2,10 @@ import sys
 from pixivpy3 import PixivAPI
 
 _REQUESTS_KWARGS = {
-     #'proxies': {
-     #    'https': 'http://127.0.0.1:1080',
-     #},
-     #'verify': True,
+     'proxies': {
+         'https': 'http://127.0.0.1:8118',
+     },
+     'verify': True,
 }
 
 class SetuService():
