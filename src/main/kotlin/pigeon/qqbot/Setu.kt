@@ -10,7 +10,6 @@ import java.net.URL
 val legalMode = listOf("text", "tag", "exact_tag", "caption")
 
 fun Bot.setu(username:String, password:String) {
-    //Signal.handle(Signal("INT")) { serv.destroy() }
     this.subscribeMessages {
         startsWith("#色图", true) {
             val xps = it.trim().split(" ")
