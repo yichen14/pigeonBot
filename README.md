@@ -8,6 +8,7 @@ Based on Mirai.
 * Yichen Lu
 * Wenshu Gao
 * Yusheng Zhao
+* Sheng Fu
 
 ## 开发计划
 ### 主要功能
