@@ -10,7 +10,7 @@ import kotlin.random.Random
 
 
 fun Bot.smartReply() {
-    var smartReplyPossibility = 100.0
+    var smartReplyPossibility = 5.0
     this.subscribeAlways<GroupMessageEvent> {
         if ((message.content.contains("我") || message.content.contains("你")) && !message.content.startsWith("#"))
             if (Random.nextDouble(1.0, 100.0) <= smartReplyPossibility) {

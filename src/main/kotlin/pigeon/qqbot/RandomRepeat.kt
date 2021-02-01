@@ -7,7 +7,7 @@ import net.mamoe.mirai.message.GroupMessageEvent
 import kotlin.random.Random
 
 fun Bot.randomRepeat() {
-    var randomRepeatProbability = 0.6
+    var randomRepeatProbability = 6.0
     this.subscribeAlways<GroupMessageEvent> {
         if (Random.nextDouble(1.0,100.0) <= randomRepeatProbability) {
             reply(message)

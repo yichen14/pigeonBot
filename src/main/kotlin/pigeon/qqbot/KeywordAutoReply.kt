@@ -21,7 +21,7 @@ const val autoReplyFilePath = "src/main/resources/autoReply.yml"
 val autoReplyFile = File(autoReplyFilePath)
 
 fun Bot.keywordAutoReply() {
-    var autoReplyPossibility = 100.0
+    var autoReplyPossibility = 50.0
     keywordMap =
         Yaml(Constructor(MutableMap::class.java)).load(autoReplyFile.inputStream()) as MutableMap<String, MutableList<String>>
     this.subscribeAlways<GroupMessageEvent> {
