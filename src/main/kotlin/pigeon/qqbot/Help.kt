@@ -8,7 +8,7 @@ import java.io.File
 fun Bot.help(){
     this.subscribeMessages {
         case("#help"){
-            File("src/resources/help.jpg").sendAsImageTo(subject)
+            File("src/main/resources/help.jpg").sendAsImageTo(subject)
         }
     }
 }
