@@ -16,7 +16,7 @@ fun Bot.setu(username:String, password:String) {
             val mode = if (xps.size > 1 && xps[0] in legalMode) xps[0] else "tag"
             var xp = it.replaceFirst(mode, "").trim()
             if (xp == "") {
-                xp = "色图"
+                xp = "ranking"
             }
             try {
                 val proc = Runtime.getRuntime().exec("python3.9 src/main/setusearch.py $username $password $xp $mode")
