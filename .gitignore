@@ -7,3 +7,5 @@ src/img/
 src/main/resources/autoReply.txt
 gradlew
 .history
+.settings/
+.project
