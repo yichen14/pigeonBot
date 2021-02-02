@@ -14,14 +14,26 @@ fun Bot.openGame(){
     this.subscribeMessages {
         startsWith("#open", true){
             val game = it.split(" ")[0]
-            val timeLast = it.split(" ")[1]
-            val gamerNo = it.split(" ")[2]
+            //val timeLast = it.split(" ")[1]
+            val gamerNo = it.split(" ")[1]
             //val time = this.time
             val timeStamp = System.currentTimeMillis()
-            val timeEnd = timeStamp + (timeLast.toLong()*60*1000)
+            //val timeEnd = timeStamp + (timeLast.toLong()*60*1000)
             val senderName = this.senderName
             val sender = this.sender.id
-            if(game != "" && timeLast != ""){
+            if (game != ""){
+                if (gameWaiting.containsKey(game)){
+                    reply("已有此名称，请使用其他名称")
+                }else {
+                    gameWaiting[game] = arrayListOf(gamerNo, sender.toString())
+                    reply(
+                        "\"${senderName}\"于\"${SimpleDateFormat("yyyy-MM-dd  HH:mm:ss z").format(Date(timeStamp))}\"\n" +
+                                "添加\"${game}\",需要\"${gamerNo}\"个人,回复#join即可加入"
+                    )
+                }
+            }
+        //judgment and reply contain time parameter
+        /*    if(game != "" && timeLast != ""){
                 if (gameWaiting.containsKey(game)){
                     reply("已有此名称，请使用其他名称")
                 }else {
@@ -32,16 +44,26 @@ fun Bot.openGame(){
                                 "会在\"${SimpleDateFormat("yyyy-MM-dd  HH:mm:ss z").format(Date(timeEnd))}\"结束"
                     )
                 }
-            }
+            }*/
         }
         startsWith("#check", true){
             var rpl = ""
             if(gameWaiting.containsKey(it)){
                 gameWaiting[it]!!.forEach {
-                    rpl+=("\n"+it)
+                    rpl+=(it+"\n")
                 }
                 reply(rpl)
             }
+        }
+        startsWith("#allGame",true){
+            var rpl = ""
+            for (key in gameWaiting.keys){
+                rpl += (key+"\n")
+                gameWaiting[key]!!.forEach{
+                    rpl += ("\t"+it+"\n")
+                }
+            }
+            reply(rpl)
         }
         startsWith("#join", true){
             if(gameWaiting.containsKey(it)) {
@@ -57,6 +79,12 @@ fun Bot.openGame(){
                 }
             } else {
                 reply("该游戏尚未创建或已过期，请重新创建")
+            }
+        }
+        startsWith("#remove",true){
+            if (gameWaiting.containsKey(it)){
+                gameWaiting.remove(it)
+                reply("已删除\"${it}\"")
             }
         }
     }
