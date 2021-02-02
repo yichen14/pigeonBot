@@ -21,15 +21,15 @@ fun Bot.openGame(){
     this.subscribeMessages {
         startsWith("#game", true){
             val opt = it.split(" ")[0]
-            val gameInfo = it.split(" ")[1]
+            //val gameInfo = it.split(" ")[1]
             val senderName = this.senderName
             val sender = this.sender.id
             val groupNum = this.subject.id
             when(opt){
                 "-open" -> {
                     val timeStamp = System.currentTimeMillis()
-                    val game = gameInfo.split(" ")[0]
-                    val gamerNo = gameInfo.split(" ")[1]
+                    val game = it.split(" ")[1]
+                    val gamerNo = it.split(" ")[2]
                     if (game != ""){
                         if (gameWaiting.containsKey(game)){
                             reply("已有此名称，请使用其他名称")
@@ -37,7 +37,7 @@ fun Bot.openGame(){
                             gameWaiting[game] = arrayListOf(timeStamp.toString(), gamerNo, sender.toString())
                             reply(
                                 "\"${senderName}\"于\"${SimpleDateFormat("yyyy-MM-dd  HH:mm:ss z").format(Date(timeStamp))}\"\n" +
-                                        "添加\"${game}\"，需要\"${gamerNo}\"个人，回复#game -join即可加入"
+                                        "添加\"${game}\"，需要\"${gamerNo}\"个人，回复#game -join \"${game}\"即可加入"
                             )
                         }
                     }
@@ -64,26 +64,28 @@ fun Bot.openGame(){
                     reply(rpl)
                 }
                 "-join" -> {
-                    if(gameWaiting.containsKey(it)) {
-                        if (checkNo(it) > 0) {//有空位置
-                            if (checkGamer(it,sender)!=0){//检查是否已加入
+                    val game = it.split(" ")[1]
+                    reply(game)
+                    if(gameWaiting.containsKey(game)) {
+                        if (checkNo(game) > 0) {//有空位置
+                            if (checkGamer(game,sender)!=0){//检查是否已加入
                                 reply("你已加入此游戏，请不要重复加入。")
                             } else {
-                                gameWaiting[it]!!.add(sender.toString())
-                                if (checkNo(it) != 0) {
-                                    reply("\"${senderName}\"已加入\"${it}\"\n还有\"${checkNo(it)}\"个空位")
+                                gameWaiting[game]!!.add(sender.toString())
+                                if (checkNo(game) != 0) {
+                                    reply("\"${senderName}\"已加入\"${game}\"\n还有\"${checkNo(game)}\"个空位")
                                 } else {
-                                    reply("\"${it}\"人已齐，开局")//
+                                    reply("\"${game}\"人已齐，开局")//
                                     var reminder = buildMessageChain {  }
                                     val a = PlainText("你们的游戏人凑齐了")
                                     reminder += a
-                                    for (i in 2 until gameWaiting[it]!!.size){
-                                        val memberID = gameWaiting[it]!![i].toLong()
+                                    for (i in 2 until gameWaiting[game]!!.size){
+                                        val memberID = gameWaiting[game]!![i].toLong()
                                         val gamer = getGroup(groupNum)[memberID].at()
                                         reminder += gamer
                                     }
                                     reply(reminder)
-                                    gameWaiting.remove(it)
+                                    gameWaiting.remove(game)
                                 }
                             }
                         } else {
@@ -94,6 +96,7 @@ fun Bot.openGame(){
                     }
                 }
                 "-quit" -> {
+                    //var game = it.split(" ")[1]
                     if(gameWaiting.containsKey(it)){
                         val checkResult = checkGamer(it,sender)
                         if (checkResult!=0){
@@ -146,7 +149,7 @@ fun Bot.openGame(){
 
 fun checkNo(game: String): Int {
     val length = gameWaiting[game]!!.size
-    return gameWaiting[game]!![0].toInt() - length +2
+    return gameWaiting[game]!![1].toInt() - length +2
 }
 
 fun checkGamer(game: String, gamer: Long): Int{
