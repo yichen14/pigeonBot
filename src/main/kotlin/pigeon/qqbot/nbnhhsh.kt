@@ -21,7 +21,7 @@ data class HhshData(
     val trans: List<String>
 )
 fun Bot.nbnhhsh() {
-    var nbnhhshPossibility = 100.0
+    var nbnhhshPossibility = 1.0
     val pattern = "[\\u4e00-\\u9fa5]".toRegex()
     this.subscribeAlways<GroupMessageEvent> {
         if (subject.id == 1143577518L || subject.id == 596870824L)
@@ -39,8 +39,14 @@ fun Bot.nbnhhsh() {
             val value = it.split(" ")[1]
             if (key == "hhshP" && value.toDouble() in 0.00..100.00) {
                 nbnhhshPossibility = value.toDouble()
-                reply("神必字母翻译概率改为$value%")
+                reply("神必字母随机翻译概率改为$value%")
             }
+        }
+        startsWith("#hhsh",true){
+            val chouxiang = it.split(" ")[0]
+            val hhsh = guess(message.content)
+            if (hhsh.isNotEmpty())
+                reply(hhsh)
         }
     }
 
