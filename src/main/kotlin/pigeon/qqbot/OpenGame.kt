@@ -1,6 +1,7 @@
 package pigeon.qqbot
 
 import net.mamoe.mirai.Bot
+import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.message.GroupMessageEvent
@@ -17,35 +18,63 @@ val gameWaiting = mutableMapOf<String, ArrayList<String>>()
     sender(id)
     sender(id)
     ...*/
+/*abstract class gameWaiting (key:String){
+    var gamerNo:Int = 0
+    var timeStamp:Long = 0
+    var gamerNumOn:Boolean = false
+    lateinit var User:ArrayList<User>
+}*/
+/*gameName
+    timeStamp
+    gamerNo
+    sender(User)
+    sender(User)
+    ...*/
 fun Bot.openGame(){
     this.subscribeMessages {
         startsWith("#game", true){
             val opt = it.split(" ")[0]
-            //val gameInfo = it.split(" ")[1]
             val senderName = this.senderName
             val sender = this.sender.id
             val groupNum = this.subject.id
             when(opt){
                 "-open" -> {
-                    val timeStamp = System.currentTimeMillis()
                     val game = it.split(" ")[1]
-                    val gamerNo = it.split(" ")[2]
-                    if (game != ""){
-                        if (gameWaiting.containsKey(game)){
+                    val timeStamp = System.currentTimeMillis()
+                    if (game.contains("+")){
+                        val gameName = game.split("+")[0]
+                        val gamerNo = game.split("+")[1]
+                        if (gameWaiting.containsKey(gameName)){
                             reply("已有此名称，请使用其他名称")
                         } else {
-                            gameWaiting[game] = arrayListOf(timeStamp.toString(), gamerNo, sender.toString())
+                            gameWaiting[gameName] = arrayListOf(timeStamp.toString(), gamerNo, sender.toString())
                             reply(
                                 "\"${senderName}\"于\"${SimpleDateFormat("yyyy-MM-dd  HH:mm:ss z").format(Date(timeStamp))}\"\n" +
-                                        "添加\"${game}\"，需要\"${gamerNo}\"个人，回复#game -join \"${game}\"即可加入"
+                                        "添加\"${gameName}\"，需要\"${gamerNo}\"个人，回复#game -join ${gameName}即可加入"
                             )
+                        }
+                    } else {
+                        val gamerNo = -1
+                        if (game != "") {
+                            if (gameWaiting.containsKey(game)) {
+                                reply("已有此名称，请使用其他名称")
+                            } else {
+                                gameWaiting[game] = arrayListOf(timeStamp.toString(), gamerNo.toString(), sender.toString())
+                                reply(
+                                    "\"${senderName}\"于\"${
+                                        SimpleDateFormat("yyyy-MM-dd  HH:mm:ss z").format(Date(timeStamp))
+                                    }\"\n" +
+                                            "添加\"$game\"，回复#game -join ${game}即可加入"
+                                )
+                            }
                         }
                     }
                 }
                 "-check" -> {
-                    if(gameWaiting.containsKey(it)){
+                    val game = it.split(" ")[1]
+                    if(gameWaiting.containsKey(game)){
                         var rpl = ""
-                        gameWaiting[it]!!.forEach {
+                        gameWaiting[game]!!.forEach {
                             rpl+=(it+"\n")
                         }
                         reply(rpl)
@@ -65,57 +94,84 @@ fun Bot.openGame(){
                 }
                 "-join" -> {
                     val game = it.split(" ")[1]
-                    reply(game)
                     if(gameWaiting.containsKey(game)) {
-                        if (checkNo(game) > 0) {//有空位置
-                            if (checkGamer(game,sender)!=0){//检查是否已加入
+                        if ( gameWaiting[game]!![2].toInt()!=-1){
+                            if (checkNo(game) > 0) {//有空位置
+                                if (checkGamer(game,sender)!=0){//检查是否已加入
+                                    reply("你已加入此游戏，请不要重复加入。")
+                                } else {
+                                    gameWaiting[game]!!.add(sender.toString())
+                                    if (checkNo(game) != 0) {
+                                        reply("\"${senderName}\"已加入\"${game}\"\n还有\"${checkNo(game)}\"个空位")
+                                    } else {
+                                        reply("\"${game}\"人已齐，开局")//
+                                        var reminder = buildMessageChain {  }
+                                        val a = PlainText("你们的游戏人凑齐了")
+                                        reminder += a
+                                        for (i in 2 until gameWaiting[game]!!.size){
+                                            val memberID = gameWaiting[game]!![i].toLong()
+                                            val gamer = getGroup(groupNum)[memberID].at()
+                                            reminder += gamer
+                                        }
+                                        reply(reminder)
+                                        gameWaiting.remove(game)
+                                    }
+                                }
+                            } else {
+                                reply("残念，人已经满了")
+                            }
+                        } else {
+                            if (checkGamer(game,sender)!=0){
                                 reply("你已加入此游戏，请不要重复加入。")
                             } else {
                                 gameWaiting[game]!!.add(sender.toString())
-                                if (checkNo(game) != 0) {
-                                    reply("\"${senderName}\"已加入\"${game}\"\n还有\"${checkNo(game)}\"个空位")
-                                } else {
-                                    reply("\"${game}\"人已齐，开局")//
-                                    var reminder = buildMessageChain {  }
-                                    val a = PlainText("你们的游戏人凑齐了")
-                                    reminder += a
-                                    for (i in 2 until gameWaiting[game]!!.size){
-                                        val memberID = gameWaiting[game]!![i].toLong()
-                                        val gamer = getGroup(groupNum)[memberID].at()
-                                        reminder += gamer
-                                    }
-                                    reply(reminder)
-                                    gameWaiting.remove(game)
-                                }
+                                reply("\"${senderName}\"已加入\"${game}\"")
                             }
-                        } else {
-                            reply("残念，人已经满了")
                         }
                     } else {
                         reply("该游戏尚未创建或已过期，请重新创建")
                     }
                 }
                 "-quit" -> {
-                    //var game = it.split(" ")[1]
-                    if(gameWaiting.containsKey(it)){
-                        val checkResult = checkGamer(it,sender)
+                    val game = it.split(" ")[1]
+                    if(gameWaiting.containsKey(game)){
+                        val checkResult = checkGamer(game,sender)
                         if (checkResult!=0){
-                            gameWaiting[it]!![checkResult] = ""
-                            reply("\"${senderName}\"已退出\"$it")
+                            gameWaiting[game]!![checkResult] = ""
+                            reply("\"${senderName}\"已退出\"$game")
                         } else {
                             reply("你都妹加入，退出个锤子")
                         }
+                    } else {
+                        reply("该游戏尚未创建或已过期，请创建后再退出")
                     }
                 }
                 "-remove" -> {
-                    if (gameWaiting.containsKey(it)){
-                        gameWaiting.remove(it)
-                        reply("已删除\"${it}\"")
+                    val game = it.split(" ")[1]
+                    if (gameWaiting.containsKey(game)){
+                        gameWaiting.remove(game)
+                        reply("已删除\"${game}\"")
+                    } else {
+                        reply("该游戏尚未创建或已过期")
                     }
                 }
-                /*"-remind" -> {
-
-                }*/
+                "-remind" -> {
+                    val game = it.split(" ")[1]
+                    if (gameWaiting.containsKey(game)){
+                        var reminder = buildMessageChain {  }
+                        val a = PlainText("你们的游戏人凑齐了")
+                        reminder += a
+                        for (i in 2 until gameWaiting[game]!!.size){
+                            val memberID = gameWaiting[game]!![i].toLong()
+                            val gamer = getGroup(groupNum)[memberID].at()
+                            reminder += gamer
+                        }
+                        reply(reminder)
+                        gameWaiting.remove(game)
+                    } else {
+                        reply("该游戏尚未创建或已过期")
+                    }
+                }
             }
             //val timeLast = it.split(" ")[1]
             //val game = gameInfo.split(" ")[0]
@@ -135,6 +191,7 @@ fun Bot.openGame(){
                     )
                 }
             }*/
+
         }
     }
 /*    this.subscribeAlways<GroupMessageEvent>{
