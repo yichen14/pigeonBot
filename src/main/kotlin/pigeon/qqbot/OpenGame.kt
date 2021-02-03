@@ -21,6 +21,11 @@ class GameInfo (User: ArrayList<User>,timestamp: Long){
     var comment: String=""
 }
 var gameWaiting = mutableMapOf<String,GameInfo>()
+/*
+TODO: -set function: change the gameName
+TODO: get lasting time of wait
+TODO: make time remind
+*/
 fun Bot.openGame(){
     this.subscribeMessages {
         startsWith("#game", true){
@@ -185,14 +190,6 @@ fun Bot.openGame(){
 
         }
     }
-/*    this.subscribeAlways<GroupMessageEvent>{
-        if (subject.id == 1143577518L ){
-            for ((key, _) in gameWaiting){
-                if (gameWaiting[key]!!.size == gameWaiting[key]!![1].toInt()+2 ) {
-                }
-            }
-        }
-    }*/
 }
 
 fun checkNo(game: String): Int {
