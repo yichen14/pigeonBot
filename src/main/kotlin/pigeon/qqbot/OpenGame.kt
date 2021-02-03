@@ -39,8 +39,8 @@ fun Bot.openGame(){
                             reply("已有此名称，请使用其他名称")
                         } else {
                             gameWaiting[gameName] = GameInfo(arrayListOf(sender),timeStamp)
-                            gameWaiting[gameName]?.gamerNumOn ?: true
-                            gameWaiting[gameName]?.gamerNo ?: gamerNo.toInt()
+                            gameWaiting[gameName]!!.gamerNumOn = true
+                            gameWaiting[gameName]!!.gamerNo = gamerNo.toInt()
                             reply(
                                 "\"${senderName}\"于\"${SimpleDateFormat("yyyy-MM-dd  HH:mm:ss z").format(Date(timeStamp))}\"\n" +
                                         "添加\"${gameName}\"，需要\"${gamerNo}\"个人，回复#game -join ${gameName}即可加入"
@@ -52,8 +52,8 @@ fun Bot.openGame(){
                                 reply("已有此名称，请使用其他名称")
                             } else {
                                 gameWaiting[game] = GameInfo(arrayListOf(sender),timeStamp)
-                                gameWaiting[game]?.gamerNumOn ?: false
-                                gameWaiting[game]?.gamerNo ?: -1
+                                gameWaiting[game]!!.gamerNumOn = false
+                                gameWaiting[game]!!.gamerNo = -1
                                 reply(
                                     "\"${senderName}\"于\"${
                                         SimpleDateFormat("yyyy-MM-dd  HH:mm:ss z").format(Date(timeStamp))
@@ -98,7 +98,7 @@ fun Bot.openGame(){
                                     if (checkNo(game) != 0) {
                                         reply("\"${senderName}\"已加入\"${game}\"\n还有\"${checkNo(game)}\"个空位")
                                     } else {
-                                        reply("\"${game}\"人已齐，开局")//
+                                        reply("\"${senderName}\"已加入\"${game}\"\n人已齐，开局")//
                                         var reminder = buildMessageChain {  }
                                         val a = PlainText("你们的游戏人凑齐了")
                                         reminder += a
