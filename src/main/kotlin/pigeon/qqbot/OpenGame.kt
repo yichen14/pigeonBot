@@ -129,7 +129,7 @@ fun Bot.openGame(){
                     val game = it.split(" ")[1]
                     if(gameWaiting.containsKey(game)){
                         val checkResult = checkGamer(game,sender)
-                        if (checkResult!=0){
+                        if (checkResult!=-1){
                             gameWaiting[game]!!.User.removeAt(checkResult)
                             reply("\"${senderName}\"已退出\"$game")
                         } else {
