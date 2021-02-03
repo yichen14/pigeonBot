@@ -28,8 +28,8 @@ class SetuService():
             for i in _illusts:
                 if str(i.work.id) not in self._fgl:
                     f = open('src/main/resources/fgl.txt', 'a')
-                    self._fgl.append(str(i.id))
-                    f.write(str(i.id) + '\n')
+                    self._fgl.append(str(i.work.id))
+                    f.write(str(i.work.id) + '\n')
                     f.close()
                     return i.work.image_urls.large.replace("i.pximg.net", "i.pixiv.cat") + " " + str(i.work.id)
         else:
