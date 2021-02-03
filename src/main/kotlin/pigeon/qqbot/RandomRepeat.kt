@@ -9,7 +9,7 @@ import kotlin.random.Random
 fun Bot.randomRepeat() {
     var randomRepeatProbability = 6.0
     this.subscribeAlways<GroupMessageEvent> {
-        if (Random.nextDouble(1.0,100.0) <= randomRepeatProbability) {
+        if (Random.nextDouble(1.0,100.0) <= randomRepeatProbability && !message.content.startsWith("#")) {
             reply(message)
         }
     }
