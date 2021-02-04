@@ -1,5 +1,6 @@
 package pigeon.qqbot
 
+import com.beust.klaxon.Klaxon
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.event.subscribeMessages
@@ -9,25 +10,21 @@ import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.message.data.queryUrl
 import net.mamoe.mirai.message.sendAsImageTo
 import org.apache.commons.codec.digest.DigestUtils
-import org.yaml.snakeyaml.Yaml
-import org.yaml.snakeyaml.constructor.Constructor
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
 import kotlin.random.Random
 
-var keywordMap = mutableMapOf<String, MutableList<String>>()
-const val autoReplyFilePath = "src/main/resources/autoReply.yml"
+const val autoReplyFilePath = "src/main/resources/autoReply.json"
 val autoReplyFile = File(autoReplyFilePath)
 
 fun Bot.keywordAutoReply() {
-    var autoReplyPossibility = 50.0
-    keywordMap =
-        Yaml(Constructor(MutableMap::class.java)).load(autoReplyFile.inputStream()) as MutableMap<String, MutableList<String>>
+    registerProbability("reply")
+    val keywordMap = Klaxon().parse<MutableMap<String, MutableList<String>>>(autoReplyFile)!!
     this.subscribeAlways<GroupMessageEvent> {
         if (subject.id == 1143577518L || subject.id == 596870824L)
             for ((key, value) in keywordMap) {
-                if (Random.nextDouble(1.0,100.0) <= autoReplyPossibility) {
+                if (Random.nextDouble(1.0, 100.0) <= getProbability("reply")) {
                     if (message.content.contains(key) && !message.content.startsWith("#")) {
                         val reply = value.random()
                         if (reply.startsWith("$"))
@@ -48,7 +45,7 @@ fun Bot.keywordAutoReply() {
                     keywordMap[key]?.add(value)
                 else
                     keywordMap[key] = mutableListOf(value)
-                Yaml().dump(keywordMap, autoReplyFile.writer())
+                autoReplyFile.writeText(Klaxon().toJsonString(keywordMap))
                 reply("添加\"${value}\"到\"${key}\"")
             } else if (message[Image] != null) {
                 val str = saveImg(message[Image]!!.queryUrl(), "autoreply")
@@ -57,7 +54,7 @@ fun Bot.keywordAutoReply() {
                         keywordMap.getValue(key).add(str)
                 } else
                     keywordMap[key] = mutableListOf(str)
-                Yaml().dump(keywordMap, autoReplyFile.writer())
+                autoReplyFile.writeText(Klaxon().toJsonString(keywordMap))
                 reply("添加\"${value}\"到\"${key}\"")
             }
         }
@@ -71,7 +68,6 @@ fun Bot.keywordAutoReply() {
                 keywordMap[key]?.remove(value)
             if (keywordMap[key].isNullOrEmpty())
                 keywordMap.remove(key)
-            Yaml().dump(keywordMap, autoReplyFile.writer())
             reply("删除\"$it\"")
         }
         startsWith("#list ", true) {
@@ -84,14 +80,6 @@ fun Bot.keywordAutoReply() {
                 } else
                     keywordMap.keys.toString()
             )
-        }
-        startsWith("#config ", true) {
-            val key = it.split(" ")[0]
-            val value = it.split(" ")[1]
-            if (key == "replyP" && value.toDouble() in 0.00..100.00) {
-                autoReplyPossibility = value.toDouble()
-                reply("自动回复概率改为$value%")
-            }
         }
     }
 }

@@ -21,11 +21,11 @@ data class HhshData(
     val trans: List<String>
 )
 fun Bot.nbnhhsh() {
-    var nbnhhshPossibility = 1.0
+    registerProbability("hhsh")
     val pattern = "[\\u4e00-\\u9fa5]".toRegex()
     this.subscribeAlways<GroupMessageEvent> {
         if (subject.id == 1143577518L || subject.id == 596870824L)
-            if (Random.nextDouble(0.0,100.0) <= nbnhhshPossibility){
+            if (Random.nextDouble(0.0,100.0) <= getProbability("hhsh")){
                 if (!message.content.startsWith("#") && !message.content.contains(pattern)) {
                     val hhsh = guess(message.content)
                     if (hhsh.isNotEmpty())
@@ -33,23 +33,6 @@ fun Bot.nbnhhsh() {
                 }
             }
     }
-    this.subscribeMessages {
-        startsWith("#config",true){
-            val key = it.split(" ")[0]
-            val value = it.split(" ")[1]
-            if (key == "hhshP" && value.toDouble() in 0.00..100.00) {
-                nbnhhshPossibility = value.toDouble()
-                reply("神必字母随机翻译概率改为$value%")
-            }
-        }
-        startsWith("#hhsh",true){
-            val chouxiang = it.split(" ")[0]
-            val hhsh = guess(message.content)
-            if (hhsh.isNotEmpty())
-                reply(hhsh)
-        }
-    }
-
 }
 
 fun guess(text: String): String{

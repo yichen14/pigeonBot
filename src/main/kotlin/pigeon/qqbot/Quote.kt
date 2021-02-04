@@ -4,7 +4,6 @@ import net.mamoe.mirai.Bot
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.Image
-import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.message.data.queryUrl
 import net.mamoe.mirai.message.sendAsImageTo
 import java.io.File
@@ -13,7 +12,7 @@ import com.google.gson.reflect.TypeToken
 
 val json = File("QuoteConfig.json").readText()
 val type = object : TypeToken<MutableList<QuoteClass>>(){}.type
-val QuoteList = Gson().fromJson<MutableList<QuoteClass>>(json,type)
+val QuoteList: MutableList<QuoteClass> = Gson().fromJson<MutableList<QuoteClass>>(json,type)
 
 fun Bot.quote() {
     this.subscribeMessages {
@@ -36,13 +35,13 @@ fun Bot.quote() {
         }
         startsWith("#搜索语录"){
             val keyWord = it.split(" ")[0]
-            val ImageList = mutableListOf<QuoteClass>()
+            val imageList = mutableListOf<QuoteClass>()
             for(quote in QuoteList){
                 if(quote.content.contains(keyWord, ignoreCase = true)){
-                    ImageList.add(quote)
+                    imageList.add(quote)
                 }
             }
-            val img = ImageList.random();
+            val img = imageList.random()
             val path = "${img.memberQQ}quotes"
             val md5 = img.md5
             File("src/img/$path/$md5.jpg").sendAsImageTo(subject)
