@@ -24,7 +24,7 @@ fun Bot.setu(username:String, password:String) {
                 val urlAndId = BufferedReader(InputStreamReader(proc.inputStream)).readLine().split(" ")
                 val url = URL(urlAndId[0])
                 val id = urlAndId[1]
-                url.openConnection().getInputStream().uploadAsImage().plus(id).sendTo(subject)//sendAsImageTo(subject).quoteReply(id)
+                url.openConnection().getInputStream().uploadAsImage().plus("https://www.pixiv.net/artworks/$id").sendTo(subject)
             } catch (e: Exception) {
                 reply(e.toString())
                 reply("找不到关键词为${xp}的色图")
