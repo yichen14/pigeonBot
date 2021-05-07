@@ -9,7 +9,7 @@ import java.net.URL
 
 val legalMode = listOf("text", "tag", "exact_tag", "caption")
 
-fun Bot.setu(username:String, password:String) {
+fun Bot.setu(token:String) {
     this.subscribeMessages {
         startsWith("#色图", true) {
             val xps = it.trim().split(" ")
@@ -19,7 +19,7 @@ fun Bot.setu(username:String, password:String) {
                 xp = "ranking"
             }
             try {
-                val proc = Runtime.getRuntime().exec("python3.9 src/main/setusearch.py $username $password $xp $mode")
+                val proc = Runtime.getRuntime().exec("python3.9 src/main/setusearch.py $token $xp $mode")
                 proc.waitFor()
                 val urlAndId = BufferedReader(InputStreamReader(proc.inputStream)).readLine().split(" ")
                 val url = URL(urlAndId[0])
