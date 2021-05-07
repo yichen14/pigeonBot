@@ -9,8 +9,7 @@ import java.io.File
 data class Config(
     var qqID: Long,
     var qqPassword: String,
-    var pixivUsername: String,
-    var pixivPassword: String,
+    var pixivToken: String,
     var probabilities: Map<String, Double>
 )
 
@@ -32,7 +31,7 @@ suspend fun main() {
     miraiBot.roll()
     miraiBot.openGame()
     miraiBot.push()
-    miraiBot.setu(config.pixivUsername,config.pixivPassword)
+    miraiBot.setu(config.pixivToken)
     miraiBot.misc()
     miraiBot.help()
     miraiBot.smartReply()
