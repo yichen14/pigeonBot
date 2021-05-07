@@ -3,7 +3,7 @@ from pixivpy3 import PixivAPI
 
 _REQUESTS_KWARGS = {
     'proxies': {
-        'https': 'http://127.0.0.1:1080',
+        'https': 'http://127.0.0.1:8118',
     },
     'verify': True,
 }
